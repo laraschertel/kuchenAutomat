@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:controller="gui.Controller"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"  >
+   <left>
+    <GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
+    <children>
+        <fx:define>
+             <ToggleGroup fx:id="cakeTypeToggleGroup"/>
+        </fx:define>
+       <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"  >
+             <RadioButton fx:id="kremkuchenButton" text="Kremkuchen" toggleGroup="$cakeTypeToggleGroup" selected="true" onAction="#selectCakeType"/>
+             <RadioButton fx:id="obstkuchenButton" text="Obstkuchen" toggleGroup="$cakeTypeToggleGroup" onAction="#selectCakeType"/>
+             <RadioButton fx:id="obsttorteButton" text="Obsttorte" toggleGroup="$cakeTypeToggleGroup" onAction="#selectCakeType"/>
+        </VBox>
+        <TextField fx:id="herstellerNameField" layoutX="10.0" layoutY="90.0" onAction="#onAddCake" promptText="Hersteller"  GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Label fx:id="allergenen" text="Allergenen:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <CheckBox fx:id="erdnuss" text="Erdnuss" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <CheckBox fx:id="gluten" text="Gluten" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <CheckBox fx:id="haselnuss" text="Hasellnuss" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <CheckBox fx:id="seasem" text="Seasam" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <TextField fx:id="naehrwertTextField" layoutX="10.0" layoutY="90.0" promptText="Naehrwert" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <TextField fx:id="haltbarkeitTextField" layoutX="10.0" layoutY="90.0" promptText="Haltbarkeit in Tagen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <TextField fx:id="preisTextField" layoutX="10.0" layoutY="90.0" promptText="Preis" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <TextField fx:id="obstsortTextField" layoutX="10.0" layoutY="90.0" promptText="Obst" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <TextField fx:id="kremsortTextField" layoutX="10.0" layoutY="90.0" promptText="Kreme" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <Button fx:id="addCake" onAction="#onAddCake" text="add cake" GridPane.rowIndex="10" />
+        <Label fx:id="message"  GridPane.columnIndex="0"  GridPane.rowIndex="14" />
+        <TextField fx:id="fachnummerToRemoveTextField" layoutX="10.0" layoutY="90.0" promptText="Fachnummer des zum loschenden Kuchen" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+        <Button fx:id="removeCake" onAction="#onRemoveCake" text="remove cake" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+        </children>
+    </GridPane>
+   </left>
+    <center>
+        <TableView fx:id="kuchenTableView"  GridPane.columnIndex="2">
+            <columns>
+                <TableColumn fx:id="fachnummerColumm" text="Fachnummer" resizable="false"/>
+                <TableColumn fx:id="herstellerColumm" text="Hersteller" resizable="false" />
+                <TableColumn fx:id="inspektionsdatumColumm" text="Inspektionsdatum" resizable="false" />
+                <TableColumn fx:id="haltbarkeitColumm" text="Haltbarkeit in Tagen" resizable="false" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
+
