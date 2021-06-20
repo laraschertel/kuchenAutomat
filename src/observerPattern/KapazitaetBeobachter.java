@@ -1,29 +1,29 @@
 package observerPattern;
 
 import automat.AutomatException;
+import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import eventHandlers.OutputEventHandlerString;
 import events.OutputEventString;
 
 public class KapazitaetBeobachter implements Beobachter {
-    AutomatVerwaltung automat;
-    OutputEventHandlerString outputEventHandlerString;
+    private AutomatPlaceHolder automatPlaceHolder;
 
 
 
-    public KapazitaetBeobachter(AutomatVerwaltung automat, OutputEventHandlerString outputEventHandlerString) {
-        this.automat = automat;
-        this.outputEventHandlerString = outputEventHandlerString;
-        this.automat.meldeAn(this);
+
+    public KapazitaetBeobachter(AutomatPlaceHolder automatPlaceHolder) {
+        this.automatPlaceHolder = automatPlaceHolder;
+        this.automatPlaceHolder.getAutomat().meldeAn(this);
 
     }
     @Override
     public void aktualisiere() throws AutomatException {
-        double neuerZustand = automat.getCakeList().length;
-        double kuchenInAutomat = automat.getAnzahlKuchenImAutomat();
+        double neuerZustand = automatPlaceHolder.getAutomat().getCakeList().length;
+        double kuchenInAutomat = automatPlaceHolder.getAutomat().getAnzahlKuchenImAutomat();
         if(kuchenInAutomat / neuerZustand >= 0.9) {
-                OutputEventString outputEventString = new OutputEventString(this, "mehr als 90% der Kapazität erreicht");
-                outputEventHandlerString.handle(outputEventString);
+            System.out.println("mehr als 90% der Kapazität erreicht");
+
             }
         }
     }

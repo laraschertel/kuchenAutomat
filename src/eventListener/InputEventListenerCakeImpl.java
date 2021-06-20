@@ -4,11 +4,11 @@ import automat.*;
 import events.InputEventCake;
 
 public class InputEventListenerCakeImpl  {
-    private AutomatVerwaltung automat;
+    private AutomatPlaceHolder automatPlaceHolder;
 
 
-    public InputEventListenerCakeImpl(AutomatVerwaltung automat){
-        this.automat = automat;
+    public InputEventListenerCakeImpl(AutomatPlaceHolder automatPlaceHolder){
+        this.automatPlaceHolder = automatPlaceHolder;
     }
 
 
@@ -16,7 +16,7 @@ public class InputEventListenerCakeImpl  {
 
         if (event.getModus().equals(":c")) {
           try {
-              automat.addKuchen(event.getKuchen());
+              automatPlaceHolder.getAutomat().addKuchen(event.getKuchen());
           }catch (Exception e){
               e.printStackTrace();
           }

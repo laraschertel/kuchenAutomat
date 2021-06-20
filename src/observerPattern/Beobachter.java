@@ -2,6 +2,8 @@ package observerPattern;
 
 import automat.AutomatException;
 
-public interface Beobachter {
+import java.io.Serializable;
+
+public interface Beobachter extends Serializable{
     void aktualisiere() throws AutomatException;
 }

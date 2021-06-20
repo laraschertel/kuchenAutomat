@@ -1,4 +1,5 @@
 import automat.AutomatException;
+import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import consolePrinter.ConsolePrinter;
 import observerPattern.KuchenBeobachter;
@@ -8,7 +9,8 @@ import simulation.*;
 
 public class Simulation2 {
     public static void main(String[] args) throws AutomatException {
-        AutomatVerwaltung automat = new AutomatVerwaltung(20);
+        AutomatVerwaltung automat= new AutomatVerwaltung(20);
+        AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
         AutomatVerwaltungSimulation automatVerwaltungSimulation = new AutomatVerwaltungSimulation(automat);
 
         ConsolePrinter cp = new ConsolePrinter();
@@ -17,7 +19,7 @@ public class Simulation2 {
         OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
         outputEventHandlerString.add(lOutputString);
 
-        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automat, outputEventHandlerString);
+        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder);
 
         automatVerwaltungSimulation.addHerstellers();
 

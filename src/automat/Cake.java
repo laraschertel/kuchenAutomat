@@ -1,11 +1,12 @@
 package automat;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 
-public abstract class Cake implements Verkaufsobjekt, Kuchen {
+public abstract class Cake implements Verkaufsobjekt, Kuchen, Serializable {
 
     private Hersteller hersteller;
     private Collection<Allergen> allergen;

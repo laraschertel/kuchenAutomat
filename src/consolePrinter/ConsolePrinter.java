@@ -4,7 +4,9 @@ import automat.*;
 import events.OutputEventCollection;
 import events.OutputEventString;
 
-public class ConsolePrinter {
+import java.io.Serializable;
+
+public class ConsolePrinter implements Serializable {
 
     public void printHerstellerList(OutputEventCollection outputEventCollection) {
 
@@ -44,30 +46,8 @@ public class ConsolePrinter {
 
     public void printCake(Cake cake){
 
-        String hersteller = cake.getHersteller().getName();
-        String preis = cake.getPreis().toString();
-        int naehrwert = cake.getNaehrwert();
-        String allergene = cake.getAllergene().toString();
-        long duration = cake.getHaltbarkeit().toDays();
-        String inspektion = cake.getInspektionsdatum().toString();
-        int fachnummer = cake.getFachnummer();
-        String einfügendatum = cake.getEinfuegedatum().toString();
+        cake.toString();
 
-        System.out.print("Hersteller: "  + hersteller + ", preis: " +  preis + ", Naehrwert: " + naehrwert +   ", Allergene: " + allergene + ", Haltbarkeit: " + duration + ", Inpektionsdatum:  " + inspektion + ", Fachnummer: " + fachnummer + ", Einfügedatum: " + einfügendatum);
-
-        if(cake instanceof ObstkuchenImpl){
-            String obstsorte = ((ObstkuchenImpl) cake).getObstsorte();
-            System.out.print(", Obtsorte: " + obstsorte);
-        } else if(cake instanceof KremkuchenImpl){
-            String kremsorte = (((KremkuchenImpl) cake).getKremsorte());
-            System.out.print( ", Kremsorte:  " + kremsorte);
-        } else if(cake instanceof ObsttorteImpl) {
-            String obstsorte = ((ObsttorteImpl) cake).getObstsorte();
-            String kremsorte = (((ObsttorteImpl) cake).getKremsorte());
-            System.out.print(", Obtsorte: " + obstsorte + ", Kremsorte:  " + kremsorte);
-        }
-
-        System.out.println();
 
     }
 

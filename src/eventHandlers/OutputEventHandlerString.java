@@ -4,10 +4,11 @@ package eventHandlers;
 import eventListener.OutputEventListenerStringImpl;
 import events.OutputEventString;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OutputEventHandlerString {
+public class OutputEventHandlerString implements Serializable {
 
     private final List<OutputEventListenerStringImpl> listenerList = new LinkedList<>();
     public void add(OutputEventListenerStringImpl listener) {

@@ -1,31 +1,29 @@
 package observerPattern;
 
 import automat.AutomatException;
+import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import eventHandlers.OutputEventHandlerString;
 import events.OutputEventString;
 
 public class KuchenBeobachter implements Beobachter {
-    AutomatVerwaltung automat;
-    OutputEventHandlerString outputEventHandlerString;
+    private AutomatPlaceHolder automatPlaceHolder;
+
 
     private int alterZustand = 0;
 
-    public KuchenBeobachter(AutomatVerwaltung automat, OutputEventHandlerString outputEventHandlerString) {
-        this.automat = automat;
-        this.outputEventHandlerString = outputEventHandlerString;
-        this.automat.meldeAn(this);
+    public KuchenBeobachter(AutomatPlaceHolder automatPlaceHolder) {
+        this.automatPlaceHolder = automatPlaceHolder;
+        this.automatPlaceHolder.getAutomat().meldeAn(this);
     }
 
     @Override
     public void aktualisiere() throws AutomatException {
-        int neuerZustand = automat.getAnzahlKuchenImAutomat();
+        int neuerZustand = automatPlaceHolder.getAutomat().getAnzahlKuchenImAutomat();
         if(neuerZustand > alterZustand){
-            OutputEventString outputEventString = new OutputEventString(this, "kuchen hingefügt");
-            outputEventHandlerString.handle(outputEventString);
+            System.out.println("kuchen hingefügt");
         } else if(neuerZustand < alterZustand){
-            OutputEventString outputEventString = new OutputEventString(this, "kuchen gelöscht");
-            outputEventHandlerString.handle(outputEventString);
+            System.out.println("kuchen gelöscht");
         }
         alterZustand = neuerZustand;
 

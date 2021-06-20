@@ -2,6 +2,7 @@ package observerPattern;
 
 import automat.Allergen;
 import automat.AutomatException;
+import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import eventHandlers.OutputEventHandlerString;
 import events.OutputEventString;
@@ -10,24 +11,23 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public class AllergeneBeobachter implements Beobachter {
-    AutomatVerwaltung automat;
-    OutputEventHandlerString outputEventHandlerString;
+    private AutomatPlaceHolder automatPlaceHolder;
+
 
     private  Set<Allergen> alterZustand = EnumSet.noneOf(Allergen.class);
 
-    public AllergeneBeobachter(AutomatVerwaltung automat, OutputEventHandlerString outputEventHandlerString) {
-        this.automat = automat;
-        this.outputEventHandlerString = outputEventHandlerString;
-        this.automat.meldeAn(this);
+    public AllergeneBeobachter(AutomatPlaceHolder automatPlaceHolder) {
+        this.automatPlaceHolder = automatPlaceHolder;
+        this. automatPlaceHolder.getAutomat().meldeAn(this);
+
 
 
     }
     @Override
     public void aktualisiere() throws AutomatException {
-        Set<Allergen> newState = automat.getVorhandeneAllergene();
+        Set<Allergen> newState = automatPlaceHolder.getAutomat().getVorhandeneAllergene();
         if(!alterZustand.containsAll(newState) || !newState.containsAll(alterZustand)) {
-            OutputEventString outputEventString = new OutputEventString(this, "Allergene Änderung");
-            outputEventHandlerString.handle(outputEventString);
+            System.out.println("Allergene Änderung");
             this.alterZustand=newState;
             }
         }

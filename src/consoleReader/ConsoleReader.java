@@ -1,15 +1,8 @@
 package consoleReader;
 
 import automat.*;
-import events.InputEventCake;
-import events.InputEventHersteller;
-import events.InputEventInteger;
-import events.InputEventString;
-import eventHandlers.InputEventHandlerCake;
-import eventHandlers.InputEventHandlerHersteller;
-import eventHandlers.InputEventHandlerInteger;
-import eventHandlers.InputEventHandlerString;
-import eventHandlers.OutputEventHandlerCollection;
+import eventHandlers.*;
+import events.*;
 
 
 import java.math.BigDecimal;
@@ -33,43 +26,48 @@ public class ConsoleReader {
     private final String KUCHEN = "kuchen";
     private final String OBSTKUCHEN = "Obstkuchen";
     private final String KREMKUCHEN = "Kremkuchen";
+    private final String SAVEJOS = "savejos";
+    private final String LOADJOS = "loadjos";
 
 
     private InputEventHandlerInteger integerHandler;
     private InputEventHandlerString stringHandler;
     private InputEventHandlerCake cakeHandler;
     private InputEventHandlerHersteller herstellerHandler;
-   private OutputEventHandlerCollection outputCollectionHandler;
+    private OutputEventHandlerCollection outputCollectionHandler;
+    private OutputEventHandlerString outputEventHandlerString;
 
-    public void setHandlers(InputEventHandlerInteger integerHandler, InputEventHandlerString stringHandler, InputEventHandlerCake cakeHandler, InputEventHandlerHersteller herstellerHandler, OutputEventHandlerCollection outputCollectionHandler ) {
-       this.integerHandler = integerHandler;
-       this.stringHandler = stringHandler;
-       this.cakeHandler = cakeHandler;
-       this.herstellerHandler = herstellerHandler;
-       this.outputCollectionHandler = outputCollectionHandler;
+
+    public void setHandlers(InputEventHandlerInteger integerHandler, InputEventHandlerString stringHandler, InputEventHandlerCake cakeHandler, InputEventHandlerHersteller herstellerHandler, OutputEventHandlerCollection outputCollectionHandler, OutputEventHandlerString outputEventHandlerString) {
+        this.integerHandler = integerHandler;
+        this.stringHandler = stringHandler;
+        this.cakeHandler = cakeHandler;
+        this.herstellerHandler = herstellerHandler;
+        this.outputCollectionHandler = outputCollectionHandler;
+        this.outputEventHandlerString = outputEventHandlerString;
     }
 
-    private static String readStringFromStdIn(String text){
+    private static String readStringFromStdIn(String text) {
         System.out.print(text + " ");
         Scanner myInput = new Scanner(System.in);
         return myInput.nextLine();
     }
 
-    private boolean isInteger( String input ) {
+    private boolean isInteger(String input) {
         try {
-            Integer.parseInt( input );
+            Integer.parseInt(input);
             return true;
-        }
-        catch( Exception e ) {
+        } catch (Exception e) {
             return false;
         }
     }
+
     public void start() {
         System.out.println("Wilkommen - Kuchen Automat - Enter a Modus");
-        try(Scanner s=new Scanner(System.in)){
+        try (Scanner s = new Scanner(System.in)) {
             do {
                 String modus = s.next();
-                switch(modus) {
+                switch (modus) {
                     case EINFUEGEMODUS:
                         try {
                             String[] addParts = readStringFromStdIn("Einfügen: ").split("\\s+");
@@ -98,8 +96,8 @@ public class ConsoleReader {
                             } else {
                                 System.err.println("Input is not valid");
                             }
-                        } catch (Exception e){
-                           e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                         break;
@@ -107,64 +105,83 @@ public class ConsoleReader {
 
                     case LOESCHMODUS:
                         try {
-                        String[] removeParts = readStringFromStdIn("Löschen: ").split("\\s+");
-                        if(removeParts.length == 1){
-                            if(isInteger(removeParts[0])){
-                                InputEventInteger removeKuchenEvent = new InputEventInteger(this, modus, Integer.parseInt(removeParts[0]));
-                                if(null!=this.integerHandler) integerHandler.handle(removeKuchenEvent);
+                            String[] removeParts = readStringFromStdIn("Löschen: ").split("\\s+");
+                            if (removeParts.length == 1) {
+                                if (isInteger(removeParts[0])) {
+                                    InputEventInteger removeKuchenEvent = new InputEventInteger(this, modus, Integer.parseInt(removeParts[0]));
+                                    if (null != this.integerHandler) integerHandler.handle(removeKuchenEvent);
+                                } else {
+                                    InputEventString removeHerstellerEvent = new InputEventString(this, modus, removeParts[0]);
+                                    if (null != this.stringHandler) stringHandler.handle(removeHerstellerEvent);
+                                }
                             } else {
-                                InputEventString removeHerstellerEvent = new InputEventString(this, modus, removeParts[0]);
-                                if(null!=this.stringHandler) stringHandler.handle(removeHerstellerEvent);
+                                this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR: input is not valid"));
                             }
-                        } else {
-                        System.err.println("Input is not valid");
-                      }
-                         } catch (Exception e){
-                              e.printStackTrace();
-                          }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         break;
 
                     case ANZEIGEMODUS:
                         try {
                             String[] anzeigeParts = readStringFromStdIn("Anzeigen: ").split("\\s+");
-                            switch(anzeigeParts[0]){
-                                case(HERSTELLER):
+                            switch (anzeigeParts[0]) {
+                                case (HERSTELLER):
                                     InputEventString printHerstelelrListEvent = new InputEventString(this, modus, anzeigeParts[0]);
-                                    if(null!=this.stringHandler) stringHandler.handle(printHerstelelrListEvent);
+                                    if (null != this.stringHandler) stringHandler.handle(printHerstelelrListEvent);
                                     break;
-                                case(ALLERGEN):
-                                    switch (anzeigeParts[1]){
+                                case (ALLERGEN):
+                                    switch (anzeigeParts[1]) {
                                         case (ENTHALTEN):
                                             InputEventString printEnthaltenAllergeneListEvent = new InputEventString(this, modus, anzeigeParts[1]);
-                                            if(null!=this.stringHandler) stringHandler.handle(printEnthaltenAllergeneListEvent);
+                                            if (null != this.stringHandler)
+                                                stringHandler.handle(printEnthaltenAllergeneListEvent);
                                             break;
                                         case (NICHENTHALTEN):
                                             InputEventString printNichtEnthaltenAllergeneListEvent = new InputEventString(this, modus, anzeigeParts[1]);
-                                            if(null!=this.stringHandler) stringHandler.handle(printNichtEnthaltenAllergeneListEvent);
+                                            if (null != this.stringHandler)
+                                                stringHandler.handle(printNichtEnthaltenAllergeneListEvent);
                                             break;
                                     }
-                                case(KUCHEN):
+                                case (KUCHEN):
                                     InputEventString printKuchenListEvent = new InputEventString(this, modus, anzeigeParts[0]);
-                                    if(null!=this.stringHandler) stringHandler.handle(printKuchenListEvent);
+                                    if (null != this.stringHandler) stringHandler.handle(printKuchenListEvent);
                                     break;
                             }
 
-                        }catch (Exception e){
-                            System.err.println("Fehler");
+                        } catch (Exception e) {
+                            this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR"));
                         }
-
-                        break;
-                    case  AENDERUNGSMODUS:
-
                         break;
 
+                    case PERSISTENZMODUS:
+                        try {
+                            String[] persistenzParts = readStringFromStdIn("Eingabe: ").split("\\s+");
+                            switch (persistenzParts[0]) {
+                                case (SAVEJOS):
+                                    InputEventString saveJOSEvent = new InputEventString(this, modus, persistenzParts[0]);
+                                    if (null != this.stringHandler) stringHandler.handle(saveJOSEvent);
+                                    break;
+                                case (LOADJOS):
+                                    InputEventString loadJOSEvent = new InputEventString(this, modus, persistenzParts[0]);
+                                    if (null != this.stringHandler) stringHandler.handle(loadJOSEvent);
+                                    break;
+                                default:
+                                    this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR: invalid input"));
 
+                                    break;
+
+
+                            }
+
+                        } catch (Exception e) {
+                            this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR"));
+                        }
                 }
-
-            }while (true);
-        } catch (Exception e) {
-            e.printStackTrace();
+            } while (true);
         }
     }
 }
+
+

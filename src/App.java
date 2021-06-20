@@ -1,4 +1,5 @@
 import automat.AutomatException;
+import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import consolePrinter.ConsolePrinter;
 import consoleReader.ConsoleReader;
@@ -26,7 +27,9 @@ public class App {
         ConsolePrinter cp = new ConsolePrinter();
         int capacity = readAutomatCapacity("Bitte the gewünschte grosse des Automaten eingeben");
 
-        AutomatVerwaltung automat = new AutomatVerwaltung(capacity);
+        AutomatVerwaltung automat= new AutomatVerwaltung(capacity);
+        AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
+
 
         InputEventHandlerCake cakeHandler = new InputEventHandlerCake();
         InputEventHandlerHersteller herstellerHandler = new InputEventHandlerHersteller();
@@ -35,10 +38,10 @@ public class App {
         OutputEventHandlerCollection outputCollectionHandler = new OutputEventHandlerCollection();
         OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
 
-        InputEventListenerCakeImpl lCake = new InputEventListenerCakeImpl(automat);
-        InputEventListenerHerstellerImpl lHersteller = new InputEventListenerHerstellerImpl(automat);
-        InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automat, outputCollectionHandler);
-        InputEventListenerIntegerImpl lInteger = new InputEventListenerIntegerImpl(automat);
+        InputEventListenerCakeImpl lCake = new InputEventListenerCakeImpl(automatPlaceHolder);
+        InputEventListenerHerstellerImpl lHersteller = new InputEventListenerHerstellerImpl(automatPlaceHolder);
+        InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automatPlaceHolder, outputCollectionHandler, outputEventHandlerString);
+        InputEventListenerIntegerImpl lInteger = new InputEventListenerIntegerImpl(automatPlaceHolder);
         OutputEventListenerCollectionImpl lOutputCollection = new OutputEventListenerCollectionImpl(cp);
         OutputEventListenerStringImpl lOutputString = new OutputEventListenerStringImpl(cp);
 
@@ -49,11 +52,11 @@ public class App {
         outputCollectionHandler.add(lOutputCollection);
         outputEventHandlerString.add(lOutputString);
 
-        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automat, outputEventHandlerString);
-        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automat, outputEventHandlerString);
-        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automat, outputEventHandlerString);
+        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder);
+        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder);
+        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder);
 
-        r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputCollectionHandler);
+        r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputCollectionHandler, outputEventHandlerString);
         r.start();
 
     }

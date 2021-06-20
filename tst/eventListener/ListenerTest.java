@@ -12,22 +12,20 @@ import java.util.Random;
 
 import automat.*;
 import consolePrinter.ConsolePrinter;
+import eventHandlers.*;
 import events.InputEventCake;
 import events.InputEventHersteller;
 import events.InputEventInteger;
 import events.OutputEventCollection;
-import eventHandlers.InputEventHandlerCake;
-import eventHandlers.InputEventHandlerHersteller;
-import eventHandlers.InputEventHandlerInteger;
-import eventHandlers.InputEventHandlerString;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import eventHandlers.OutputEventHandlerCollection;
+import simulation.AutomatVerwaltungSimulation;
 
 
 public class ListenerTest {
     ConsolePrinter cp = new ConsolePrinter();
-    AutomatVerwaltung automat = new AutomatVerwaltung(2);
+    AutomatVerwaltung automat= new AutomatVerwaltung(20);
+    AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
     Date inspektionsDate = new Date();
     Date einfügedatum = new Date();
 
@@ -41,14 +39,15 @@ public class ListenerTest {
 
     OutputEventHandlerCollection outputCollectionHandler = new OutputEventHandlerCollection();
     OutputEventListenerCollectionImpl lOutputCollection = new OutputEventListenerCollectionImpl(cp);
+    OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
     InputEventHandlerCake cakeHandler = new InputEventHandlerCake();
     InputEventHandlerHersteller herstellerHandler = new InputEventHandlerHersteller();
     InputEventHandlerString stringHandler = new InputEventHandlerString();
-    InputEventListenerCakeImpl lCake = new InputEventListenerCakeImpl(this.automat);
-    InputEventListenerHerstellerImpl lHersteller = new InputEventListenerHerstellerImpl(this.automat);
-    InputEventListenerStringImpl lString = new InputEventListenerStringImpl(this.automat, outputCollectionHandler);
+    InputEventListenerCakeImpl lCake = new InputEventListenerCakeImpl(this.automatPlaceHolder);
+    InputEventListenerHerstellerImpl lHersteller = new InputEventListenerHerstellerImpl(this.automatPlaceHolder);
+    InputEventListenerStringImpl lString = new InputEventListenerStringImpl(this.automatPlaceHolder, outputCollectionHandler, outputEventHandlerString);
     InputEventHandlerInteger integerHandler = new InputEventHandlerInteger();
-    InputEventListenerIntegerImpl lInteger = new InputEventListenerIntegerImpl(this.automat);
+    InputEventListenerIntegerImpl lInteger = new InputEventListenerIntegerImpl(this.automatPlaceHolder);
 
     public ListenerTest() throws AutomatException {
     }
@@ -59,33 +58,33 @@ public class ListenerTest {
         InputEventHersteller herstellerEvent = new InputEventHersteller(this, ":c", hersteller1);
         lHersteller.onInputEvent(herstellerEvent);
 
-        Assertions.assertTrue(automat.getHerstellerList().contains(hersteller1));
+        Assertions.assertTrue(automatPlaceHolder.getAutomat().getHerstellerList().contains(hersteller1));
     }
 
     @Test
     public void gutTestAddObstkuchen() throws AutomatException {
-        automat.addHersteller(hersteller1);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller1);
 
         InputEventCake cakeEvent = new InputEventCake(this, ":c", berryCake);
         lCake.onInputEvent(cakeEvent);
 
-        Assertions.assertEquals(berryCake, automat.getCakeList()[0]);
+        Assertions.assertEquals(berryCake, automatPlaceHolder.getAutomat().getCakeList()[0]);
     }
 
     @Test
     public void gutTestAddKremkuchen() throws AutomatException {
-        automat.addHersteller(hersteller2);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
         InputEventCake cakeEvent = new InputEventCake(this, ":c", butterCake);
         lCake.onInputEvent(cakeEvent);
 
-        Assertions.assertEquals(butterCake, automat.getCakeList()[0]);
+        Assertions.assertEquals(butterCake, automatPlaceHolder.getAutomat().getCakeList()[0]);
     }
 
     @Test
     public void gutTestAddMehrereKcuhen() throws AutomatException {
-        automat.addHersteller(hersteller1);
-        automat.addHersteller(hersteller2);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller1);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
         InputEventCake kremkuchenEvent = new InputEventCake(this, ":c", butterCake);
         lCake.onInputEvent(kremkuchenEvent);
@@ -93,15 +92,15 @@ public class ListenerTest {
         InputEventCake obstkuchenEvent = new InputEventCake(this, ":c", berryCake);
         lCake.onInputEvent(obstkuchenEvent);
 
-        Assertions.assertTrue(automat.getHerstellerList().contains(hersteller1));
-        Assertions.assertEquals(butterCake, automat.getCakeList()[0]);
-        Assertions.assertEquals(berryCake, automat.getCakeList()[1]);
+        Assertions.assertTrue(automatPlaceHolder.getAutomat().getHerstellerList().contains(hersteller1));
+        Assertions.assertEquals(butterCake, automatPlaceHolder.getAutomat().getCakeList()[0]);
+        Assertions.assertEquals(berryCake, automatPlaceHolder.getAutomat().getCakeList()[1]);
 
     }
 
     @Test
     public void gutTestRemoveObstkuchen() throws AutomatException {
-        automat.addHersteller(hersteller1);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller1);
 
         InputEventCake cakeAddEvent = new InputEventCake(this, ":c", berryCake);
         lCake.onInputEvent(cakeAddEvent);
@@ -109,13 +108,13 @@ public class ListenerTest {
         InputEventInteger cakeRemoveEvent = new InputEventInteger(this, ":d", 0);
         lInteger.onInputEvent(cakeRemoveEvent);
 
-        Assertions.assertEquals(null, automat.getCakeList()[0]);
+        Assertions.assertEquals(null, automatPlaceHolder.getAutomat().getCakeList()[0]);
     }
 
     @Test
     public void gutPrintKuchen() throws AutomatException {
-        automat.addHersteller(hersteller1);
-        automat.addHersteller(hersteller2);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller1);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
         InputEventCake kremkuchenEvent = new InputEventCake(this, ":c", butterCake);
         lCake.onInputEvent(kremkuchenEvent);
@@ -123,10 +122,10 @@ public class ListenerTest {
         InputEventCake obstkuchenEvent = new InputEventCake(this, ":c", berryCake);
         lCake.onInputEvent(obstkuchenEvent);
 
-        OutputEventCollection outputEventCollection = new OutputEventCollection(this, "kuchen", Arrays.asList(automat.getCakeList()));
+        OutputEventCollection outputEventCollection = new OutputEventCollection(this, "kuchen", Arrays.asList(automatPlaceHolder.getAutomat().getCakeList()));
         lOutputCollection.onOutputEvent(outputEventCollection);
 
-        Assertions.assertTrue(automat.getHerstellerList().contains(hersteller1));
+        Assertions.assertTrue(automatPlaceHolder.getAutomat().getHerstellerList().contains(hersteller1));
     }
 
     public Date getRandomDate(){

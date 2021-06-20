@@ -4,6 +4,7 @@ import automat.AutomatException;
 import eventListener.InputEventListenerStringImpl;
 import events.InputEventString;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,5 +16,5 @@ public class InputEventHandlerString {
     public void remove(InputEventListenerStringImpl listener) {
         this.listenerList.remove(listener);
     }
-    public void handle(InputEventString event) throws AutomatException {for (InputEventListenerStringImpl listener : listenerList) listener.onInputEvent(event);}
+    public void handle(InputEventString event) throws AutomatException, IOException {for (InputEventListenerStringImpl listener : listenerList) listener.onInputEvent(event);}
 }

@@ -3,15 +3,16 @@ package automat;
 import observerPattern.Beobachter;
 import observerPattern.Subjekt;
 
+import java.io.Serializable;
 import java.util.*;
 
 
-public class AutomatVerwaltung implements Subjekt  {
+public class AutomatVerwaltung implements Subjekt, Serializable {
 
     private Cake[] cakeList;
     private HashSet<Hersteller> herstellerList = new HashSet<>();
     private int capacity;
-    private List<Beobachter> beobachterList = new LinkedList<>();
+    private final List<Beobachter> beobachterList = new LinkedList<>();
 
 
     public AutomatVerwaltung(int capacity) throws AutomatException {

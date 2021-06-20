@@ -21,7 +21,9 @@ import java.util.Date;
 public class BeobachterTest {
 
     ConsolePrinter cp = new ConsolePrinter();
-    AutomatVerwaltung automat = new AutomatVerwaltung(2);
+    AutomatVerwaltung automat= new AutomatVerwaltung(20);
+    AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
+
     Date inspektionsDate = new Date();
     Date einfügedatum = new Date();
 
@@ -29,15 +31,15 @@ public class BeobachterTest {
     Hersteller hersteller2 = new HerstellerImpl("hersteller2");
 
 
-    Cake berryCake = new ObstkuchenImpl(hersteller1, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten), inspektionsDate, automat.getAvailableFachnummer(), einfügedatum, "berry");
-    Cake butterCake = new KremkuchenImpl(hersteller2, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten), inspektionsDate, automat.getAvailableFachnummer(), einfügedatum, "butter");
+    Cake berryCake = new ObstkuchenImpl(hersteller1, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten), inspektionsDate, automatPlaceHolder.getAutomat().getAvailableFachnummer(), einfügedatum, "berry");
+    Cake butterCake = new KremkuchenImpl(hersteller2, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten), inspektionsDate, automatPlaceHolder.getAutomat().getAvailableFachnummer(), einfügedatum, "butter");
 
 
     InputEventHandlerString stringHandler = new InputEventHandlerString();
     OutputEventHandlerCollection outputCollectionHandler = new OutputEventHandlerCollection();
     OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
 
-    InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automat, outputCollectionHandler);
+    InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automatPlaceHolder, outputCollectionHandler, outputEventHandlerString);
     OutputEventListenerStringImpl lOutputString = new OutputEventListenerStringImpl(cp);
 
 
@@ -49,18 +51,18 @@ public class BeobachterTest {
     public void gutTestCapacity() throws AutomatException, IOException, InterruptedException {
         stringHandler.add(lString);
         outputEventHandlerString.add(lOutputString);
-        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automat, outputEventHandlerString);
+        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder);
 
 
-        automat.addHersteller(hersteller1);
-        automat.addHersteller(hersteller2);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller1);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
-        automat.addKuchen(butterCake);
+        automatPlaceHolder.getAutomat().addKuchen(butterCake);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream));
 
-        automat.addKuchen(berryCake);
+        automatPlaceHolder.getAutomat().addKuchen(berryCake);
 
         Assertions.assertEquals("mehr als 90% der Kapazität erreicht" + System.lineSeparator() , byteArrayOutputStream.toString() );
         byteArrayOutputStream.close();
@@ -70,15 +72,15 @@ public class BeobachterTest {
     public void gutTestAllergeneÄnderung() throws AutomatException, IOException, InterruptedException {
         stringHandler.add(lString);
         outputEventHandlerString.add(lOutputString);
-        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automat, outputEventHandlerString);
+        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder);
 
 
-        automat.addHersteller(hersteller2);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream));
 
-        automat.addKuchen(butterCake);
+        automatPlaceHolder.getAutomat().addKuchen(butterCake);
 
         Assertions.assertEquals("Allergene Änderung" + System.lineSeparator() , byteArrayOutputStream.toString() );
         byteArrayOutputStream.close();
@@ -88,17 +90,17 @@ public class BeobachterTest {
     public void gutTestKeineAllergeneÄnderung() throws AutomatException, IOException, InterruptedException {
         stringHandler.add(lString);
         outputEventHandlerString.add(lOutputString);
-        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automat, outputEventHandlerString);
+        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder);
 
-        automat.addHersteller(hersteller1);
-        automat.addHersteller(hersteller2);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller1);
+        automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
-        automat.addKuchen(butterCake);
+        automatPlaceHolder.getAutomat().addKuchen(butterCake);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(byteArrayOutputStream));
 
-        automat.addKuchen(berryCake);
+        automatPlaceHolder.getAutomat().addKuchen(berryCake);
 
         Assertions.assertNotEquals("Allergene Änderung" + System.lineSeparator() , byteArrayOutputStream.toString() );
         byteArrayOutputStream.close();

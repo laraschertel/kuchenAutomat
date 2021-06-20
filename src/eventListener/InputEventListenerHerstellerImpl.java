@@ -1,15 +1,16 @@
 package eventListener;
 
 import automat.AutomatException;
+import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import events.InputEventHersteller;
 
 public class InputEventListenerHerstellerImpl{
-    private AutomatVerwaltung automat;
+    private AutomatPlaceHolder automatPlaceHolder;
     private final String INPUTERROR = "Input error";
 
-    public InputEventListenerHerstellerImpl(AutomatVerwaltung automat){
-        this.automat = automat;
+    public InputEventListenerHerstellerImpl(AutomatPlaceHolder automatPlaceHolder){
+        this.automatPlaceHolder = automatPlaceHolder;
     }
 
 
@@ -17,7 +18,7 @@ public class InputEventListenerHerstellerImpl{
 
         if (event.getModus().equals(":c")) {
             try {
-                automat.addHersteller(event.getHersteller());
+                automatPlaceHolder.getAutomat().addHersteller(event.getHersteller());
             }catch (AutomatException e){
                 System.err.println(INPUTERROR);
             }
