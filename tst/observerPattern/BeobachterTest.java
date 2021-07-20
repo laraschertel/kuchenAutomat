@@ -51,7 +51,7 @@ public class BeobachterTest {
     public void gutTestCapacity() throws AutomatException, IOException, InterruptedException {
         stringHandler.add(lString);
         outputEventHandlerString.add(lOutputString);
-        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder);
+        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder, outputEventHandlerString);
 
 
         automatPlaceHolder.getAutomat().addHersteller(hersteller1);
@@ -72,7 +72,7 @@ public class BeobachterTest {
     public void gutTestAllergeneÄnderung() throws AutomatException, IOException, InterruptedException {
         stringHandler.add(lString);
         outputEventHandlerString.add(lOutputString);
-        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder);
+        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
 
 
         automatPlaceHolder.getAutomat().addHersteller(hersteller2);
@@ -90,7 +90,7 @@ public class BeobachterTest {
     public void gutTestKeineAllergeneÄnderung() throws AutomatException, IOException, InterruptedException {
         stringHandler.add(lString);
         outputEventHandlerString.add(lOutputString);
-        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder);
+        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
 
         automatPlaceHolder.getAutomat().addHersteller(hersteller1);
         automatPlaceHolder.getAutomat().addHersteller(hersteller2);

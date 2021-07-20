@@ -9,10 +9,10 @@ import java.util.*;
 
 public class AutomatVerwaltung implements Subjekt, Serializable {
 
-    private Cake[] cakeList;
-    private HashSet<Hersteller> herstellerList = new HashSet<>();
+    private final Cake[] cakeList;
+    private final HashSet<Hersteller> herstellerList = new HashSet<>();
     private int capacity;
-    private final List<Beobachter> beobachterList = new LinkedList<>();
+    transient List<Beobachter> beobachterList = new LinkedList<>();
 
 
     public AutomatVerwaltung(int capacity) throws AutomatException {
@@ -47,15 +47,19 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
         this.benachrichtige();
     }
 
-    //TODO: original liste nicht rausgeben!!
     public HashSet<Hersteller> getHerstellerList(){
-        return this.herstellerList;
+
+        HashSet<Hersteller> returnHerstellerList = this.herstellerList;
+
+        return returnHerstellerList;
     }
 
 
-    //TODO: original liste nicht rausgeben!!
     public Cake[] getCakeList() {
-        return this.cakeList;
+
+        Cake[] returnCakeList = this.cakeList;
+
+        return returnCakeList;
     }
 
     public synchronized void addKuchen(Cake cake) throws AutomatException, InterruptedException {
@@ -239,11 +243,15 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
     }
 
     @Override
-    public void benachrichtige() throws AutomatException {
-        for (Beobachter beobachter : this.beobachterList) {
-            beobachter.aktualisiere();
-        }
+    public void benachrichtige() throws AutomatException, NullPointerException {
+
+            if (this.beobachterList != null) {
+                for (Beobachter beobachter : this.beobachterList) {
+                    beobachter.aktualisiere();
+                }
+            }
+
+
+
     }
-
-
 }

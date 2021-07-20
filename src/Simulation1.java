@@ -22,7 +22,7 @@ public class Simulation1 {
         OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
         outputEventHandlerString.add(lOutputString);
 
-        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder);
+        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
 
         automatVerwaltungSimulation.addHerstellers();
 

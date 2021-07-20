@@ -23,7 +23,7 @@ public class OutputEventListenerCollectionImpl {
             consolePrinter.printKuchenList(event);
 
         } else if(event.getString().equalsIgnoreCase(ALLERGENEENTHALTEN) || event.getString().equalsIgnoreCase(ALLERGENENICHENTHALTEN)){
-
+            consolePrinter.printAllergeneList(event);
         }
     }
 }

@@ -24,8 +24,19 @@ public class ConsolePrinter implements Serializable {
     }
 
     public void printAllergeneList(OutputEventCollection outputEventCollection){
-        //TODO
+        Object[] objectsArray = outputEventCollection.getCollection().toArray();
+
+        try {
+            for (Object o : objectsArray) {
+                Allergen a = (Allergen) o;
+                System.out.println(a.toString());
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     public void printKuchenList(OutputEventCollection outputEventCollection) {
 
@@ -46,7 +57,7 @@ public class ConsolePrinter implements Serializable {
 
     public void printCake(Cake cake){
 
-        cake.toString();
+        System.out.println(cake.toString());
 
 
     }

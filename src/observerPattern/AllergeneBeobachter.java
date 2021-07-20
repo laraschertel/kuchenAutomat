@@ -12,14 +12,14 @@ import java.util.Set;
 
 public class AllergeneBeobachter implements Beobachter {
     private AutomatPlaceHolder automatPlaceHolder;
-
+    OutputEventHandlerString outputEventHandlerString;
 
     private  Set<Allergen> alterZustand = EnumSet.noneOf(Allergen.class);
 
-    public AllergeneBeobachter(AutomatPlaceHolder automatPlaceHolder) {
+    public AllergeneBeobachter(AutomatPlaceHolder automatPlaceHolder, OutputEventHandlerString outputEventHandlerString) {
         this.automatPlaceHolder = automatPlaceHolder;
-        this. automatPlaceHolder.getAutomat().meldeAn(this);
-
+        this.outputEventHandlerString = outputEventHandlerString;
+        this.automatPlaceHolder.getAutomat().meldeAn(this);
 
 
     }
@@ -27,7 +27,8 @@ public class AllergeneBeobachter implements Beobachter {
     public void aktualisiere() throws AutomatException {
         Set<Allergen> newState = automatPlaceHolder.getAutomat().getVorhandeneAllergene();
         if(!alterZustand.containsAll(newState) || !newState.containsAll(alterZustand)) {
-            System.out.println("Allergene Änderung");
+            OutputEventString outputEventString = new OutputEventString(this, "Allergene Änderung");
+            outputEventHandlerString.handle(outputEventString);
             this.alterZustand=newState;
             }
         }

@@ -33,7 +33,7 @@ public class JOS {
 
         /////////////////////////////////////////////////// save automat ////////////////////////////////////////////////
 
-        persistence.saveAutomatJOS();
+        persistence.serialize();
 
         System.out.println(automatPlaceHolder.getAutomat());
         System.out.println(automatPlaceHolder.getAutomat().getCakeList());
@@ -42,7 +42,7 @@ public class JOS {
 
         ///////////////////////////////////////////// load automat //////////////////////////////////////////////////////
 
-       persistence.loadAutomatJOS();
+       persistence.deserialize();
         System.out.println(automatPlaceHolder.getAutomat());
         System.out.println(automatPlaceHolder.getAutomat().getCakeList());
         System.out.println(automatPlaceHolder.getAutomat().getCakeList()[0]);

@@ -52,9 +52,9 @@ public class App {
         outputCollectionHandler.add(lOutputCollection);
         outputEventHandlerString.add(lOutputString);
 
-        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder);
-        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder);
-        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder);
+        KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder, outputEventHandlerString);
+        AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
+        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
 
         r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputCollectionHandler, outputEventHandlerString);
         r.start();

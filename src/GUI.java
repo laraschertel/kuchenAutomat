@@ -8,7 +8,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/sample.fxml"));
         primaryStage.setTitle("Kuchen Automat");
         primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.setMinHeight(300);

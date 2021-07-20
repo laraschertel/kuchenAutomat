@@ -8,12 +8,13 @@ import events.OutputEventString;
 
 public class KuchenBeobachter implements Beobachter {
     private AutomatPlaceHolder automatPlaceHolder;
-
+    OutputEventHandlerString outputEventHandlerString;
 
     private int alterZustand = 0;
 
-    public KuchenBeobachter(AutomatPlaceHolder automatPlaceHolder) {
+    public KuchenBeobachter(AutomatPlaceHolder automatPlaceHolder, OutputEventHandlerString outputEventHandlerString) {
         this.automatPlaceHolder = automatPlaceHolder;
+        this.outputEventHandlerString = outputEventHandlerString;
         this.automatPlaceHolder.getAutomat().meldeAn(this);
     }
 
@@ -21,9 +22,11 @@ public class KuchenBeobachter implements Beobachter {
     public void aktualisiere() throws AutomatException {
         int neuerZustand = automatPlaceHolder.getAutomat().getAnzahlKuchenImAutomat();
         if(neuerZustand > alterZustand){
-            System.out.println("kuchen hingefügt");
+            OutputEventString outputEventString = new OutputEventString(this, "kuchen hingefügt");
+            outputEventHandlerString.handle(outputEventString);
         } else if(neuerZustand < alterZustand){
-            System.out.println("kuchen gelöscht");
+            OutputEventString outputEventString = new OutputEventString(this, "kuchen gelöscht");
+            outputEventHandlerString.handle(outputEventString);
         }
         alterZustand = neuerZustand;
 
