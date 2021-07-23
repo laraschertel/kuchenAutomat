@@ -16,5 +16,5 @@ public class InputEventHandlerString {
     public void remove(InputEventListenerStringImpl listener) {
         this.listenerList.remove(listener);
     }
-    public void handle(InputEventString event) throws AutomatException, IOException {for (InputEventListenerStringImpl listener : listenerList) listener.onInputEvent(event);}
+    public void handle(InputEventString event) throws AutomatException, IOException, InterruptedException {for (InputEventListenerStringImpl listener : listenerList) listener.onInputEvent(event);}
 }

@@ -11,18 +11,14 @@ public class OutputEventListenerCollectionImpl {
     private final String ALLERGENENICHENTHALTEN = "(e)";
     private final String KUCHEN = "kuchen";
 
+
     public OutputEventListenerCollectionImpl(ConsolePrinter consolePrinter){
         this.consolePrinter = consolePrinter;
     }
 
 
     public void onOutputEvent(OutputEventCollection event) {
-        if(event.getString().equalsIgnoreCase(HERSTELLER)) {
-            consolePrinter.printHerstellerList(event);
-        } else if(event.getString().equalsIgnoreCase(KUCHEN)){
-            consolePrinter.printKuchenList(event);
-
-        } else if(event.getString().equalsIgnoreCase(ALLERGENEENTHALTEN) || event.getString().equalsIgnoreCase(ALLERGENENICHENTHALTEN)){
+       if(event.getString().equalsIgnoreCase(ALLERGENEENTHALTEN) || event.getString().equalsIgnoreCase(ALLERGENENICHENTHALTEN)){
             consolePrinter.printAllergeneList(event);
         }
     }

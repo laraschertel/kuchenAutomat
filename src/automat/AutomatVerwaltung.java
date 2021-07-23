@@ -9,7 +9,7 @@ import java.util.*;
 
 public class AutomatVerwaltung implements Subjekt, Serializable {
 
-    private final Cake[] cakeList;
+    private final KuchenKomponent[] cakeList;
     private final HashSet<Hersteller> herstellerList = new HashSet<>();
     private int capacity;
     transient List<Beobachter> beobachterList = new LinkedList<>();
@@ -19,7 +19,7 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
         this.capacity = capacity;
 
         if(capacity > 0) {
-            this.cakeList = new Cake[capacity];
+            this.cakeList = new KuchenKomponent[capacity];
 
         } else{
             throw new AutomatException("Capacity muss großer als 0 sein");
@@ -55,14 +55,14 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
     }
 
 
-    public Cake[] getCakeList() {
+    public KuchenKomponent[] getCakeList() {
 
-        Cake[] returnCakeList = this.cakeList;
+        KuchenKomponent[] returnCakeList = this.cakeList;
 
         return returnCakeList;
     }
 
-    public synchronized void addKuchen(Cake cake) throws AutomatException, InterruptedException {
+    public synchronized void addKuchen(KuchenKomponent cake) throws AutomatException, InterruptedException {
 
         boolean herstellerExistiert = false;
 
@@ -71,10 +71,11 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
                     int fachnummer = getAvailableFachnummer();
                     cakeList[fachnummer] = cake;
                     cake.setFachnummer(fachnummer);
+                    cake.setInspektionsdatum(new Date());
+                    cake.setEinfuegeDatum(new Date());
                     herstellerExistiert = true;
                     this.benachrichtige();
                 }
-
             }
             if (!herstellerExistiert) {
                 throw new AutomatException("Kuchen kann nicht eingefügt werden, da der eingegebene Hersteller nicht bekannt ist");
@@ -98,8 +99,8 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
 
             for (Hersteller hersteller : herstellerList) {
                 int counter = 0;
-                for (Cake cake : cakeList) {
-                    if (cake != null && cake.getHersteller().equals(hersteller)) {
+                for (KuchenKomponent cake : cakeList) {
+                    if (cake != null && cake.getHersteller().getName().equals(hersteller.getName())) {
                         counter++;
                     }
                 }
@@ -109,35 +110,28 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
         return kuchenProHersteller;
     }
 
-    public synchronized List<Cake> getAlleKuchenEinesTyps(String kuchenTyp) throws AutomatException {
 
-        List<Cake> alleKuchenEinesTyps = new LinkedList<>();
-        {
-            if (kuchenTyp == "Kremkuchen") {
-                for (Cake cake : cakeList) {
-                    if (cake instanceof KremkuchenImpl) {
-                        alleKuchenEinesTyps.add(cake);
-                    }
-                }
-            } else if (kuchenTyp == "Obstkuchen") {
-                for (Cake cake : cakeList) {
-                    if (cake instanceof ObstkuchenImpl) {
-                        alleKuchenEinesTyps.add(cake);
-                    }
-                }
-            } else if (kuchenTyp == "Obsttorte") {
-                for (Cake cake : cakeList) {
-                    if (cake instanceof ObsttorteImpl) {
-                        alleKuchenEinesTyps.add(cake);
-                    }
-                }
-            } else {
-                throw new AutomatException("Der eingegebene Kuchentyp existiert nicht");
+    public synchronized KuchenKomponent[] getAlleKuchenEinesTyps(String kuchenTyp){
+
+        int counter = 0;
+
+        for (KuchenKomponent cake : cakeList) {
+            if (cake != null && cake.getKuchentyp().toString().equalsIgnoreCase(kuchenTyp)) {
+                counter++;
+            }
+        }
+        KuchenKomponent[] alleKuchenEinesTyps = new KuchenKomponent[counter];
+        int j=0;
+        for (int i=0; i < cakeList.length; i++) {
+            if (cakeList[i] != null && cakeList[i].getKuchentyp().toString().equalsIgnoreCase(kuchenTyp)) {
+                alleKuchenEinesTyps[j] = cakeList[i];
+                j++;
             }
         }
         return alleKuchenEinesTyps;
 
     }
+
 
    public synchronized int getAvailableFachnummer() throws AutomatException {
        int fachnummer = -1;
@@ -169,7 +163,7 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
 
    public void inspectAutomat() {
 
-        for(Cake cake : cakeList){
+        for(KuchenKomponent cake : cakeList){
             if(cake != null){
                 cake.setInspektionsdatum(new Date());
             }
@@ -177,7 +171,7 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
     }
 
     public synchronized void inspectCake(int fachnummer) throws AutomatException {
-        for(Cake cake : cakeList){
+        for(KuchenKomponent cake : cakeList){
             if(cake!= null && cake.getFachnummer() == fachnummer){
                 cake.setInspektionsdatum(new Date());
                 this.benachrichtige();
@@ -190,7 +184,7 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
     public EnumSet<Allergen> getVorhandeneAllergene() {
         EnumSet<Allergen> vorhandeneAllergenList = EnumSet.noneOf(Allergen.class);
         synchronized (this) {
-            for (Cake cake : this.cakeList) {
+            for (KuchenKomponent cake : this.cakeList) {
                 if (cake != null) {
                     for (Allergen allergene : cake.getAllergene()) {
                         vorhandeneAllergenList.add(allergene);
@@ -206,7 +200,7 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
         EnumSet<Allergen> nichtVorhandeneAllergenList = EnumSet.allOf(Allergen.class);
 
         synchronized (this) {
-            for (Cake cake : this.cakeList) {
+            for (KuchenKomponent cake : this.cakeList) {
                 if (cake != null) {
                     for (Allergen allergene : cake.getAllergene()) {
                         nichtVorhandeneAllergenList.remove(allergene);

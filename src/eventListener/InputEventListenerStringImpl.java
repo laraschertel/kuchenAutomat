@@ -1,11 +1,11 @@
 package eventListener;
 
 import automat.*;
+import eventHandlers.OutputEventHandlerCakeList;
+import eventHandlers.OutputEventHandlerHerstellerMap;
 import eventHandlers.OutputEventHandlerString;
-import events.InputEventString;
-import events.OutputEventCollection;
+import events.*;
 import eventHandlers.OutputEventHandlerCollection;
-import events.OutputEventString;
 
 import java.io.*;
 import java.util.Arrays;
@@ -14,6 +14,8 @@ public class InputEventListenerStringImpl {
     private AutomatPlaceHolder automatPlaceHolder;
     private final OutputEventHandlerCollection outputEventHandlerCollection;
     private final OutputEventHandlerString outputEventHandlerString;
+    private final OutputEventHandlerHerstellerMap outputEventHandlerHerstellerMap;
+    private final OutputEventHandlerCakeList outputEventHandlerCakeList;
     private final String EINFUEGEMODUS = ":c";
     private final String LOESCHMODUS = ":d";
     private final String ANZEIGEMODUS = ":r";
@@ -22,26 +24,35 @@ public class InputEventListenerStringImpl {
     private final String ALLERGENEENTHALTEN = "(i)";
     private final String ALLERGENENICHENTHALTEN = "(e)";
     private final String KUCHEN = "kuchen";
-    private final String SAVEJOS = "savejos";
-    private final String LOADJOS = "loadjos";
+    private final String SAVEJOS = "saveJOS";
+    private final String LOADJOS = "loadJOS";
 
-    public InputEventListenerStringImpl(AutomatPlaceHolder automatPlaceHolder, OutputEventHandlerCollection outputEventHandlerCollection, OutputEventHandlerString outputEventHandlerString){
+
+    public InputEventListenerStringImpl(AutomatPlaceHolder automatPlaceHolder, OutputEventHandlerCollection outputEventHandlerCollection, OutputEventHandlerString outputEventHandlerString, OutputEventHandlerHerstellerMap outputEventHandlerHerstellerMap, OutputEventHandlerCakeList outputEventHandlerCakeList){
         this.automatPlaceHolder = automatPlaceHolder;
         this.outputEventHandlerCollection = outputEventHandlerCollection;
         this.outputEventHandlerString = outputEventHandlerString;
+        this.outputEventHandlerHerstellerMap = outputEventHandlerHerstellerMap;
+        this. outputEventHandlerCakeList =  outputEventHandlerCakeList;
     }
 
-    public void onInputEvent(InputEventString event) throws IOException {
+    public void onInputEvent(InputEventString event) throws IOException, AutomatException, InterruptedException {
 
         switch (event.getModus()){
-            case(EINFUEGEMODUS):
-
+            case(LOESCHMODUS):
+                automatPlaceHolder.getAutomat().removeHersteller(event.getString());
                 break;
             case(ANZEIGEMODUS):
+                if(event.getString().contains("Kuchentyp")){
+                    String[] kuchentyp = event.getString().split(":");
+                    OutputEventCakeList outputEventCakeList = new  OutputEventCakeList(this, KUCHEN, (automatPlaceHolder.getAutomat().getAlleKuchenEinesTyps(kuchentyp[1])));
+                    this. outputEventHandlerCakeList.handle(outputEventCakeList );
+                }
                 switch (event.getString()){
                     case (HERSTELLER):
-                        OutputEventCollection outputEventCollectionHersteller = new OutputEventCollection(this, HERSTELLER ,automatPlaceHolder.getAutomat().getHerstellerList());
-                        this.outputEventHandlerCollection.handle(outputEventCollectionHersteller);
+                        automatPlaceHolder.getAutomat().getHerstellerListMitKuchenAnzahl();
+                        OutputEventHerstellerMap outputEventHerstellerMap = new  OutputEventHerstellerMap(this, HERSTELLER, automatPlaceHolder.getAutomat().getHerstellerListMitKuchenAnzahl());
+                        this.outputEventHandlerHerstellerMap.handle(outputEventHerstellerMap);
                         break;
                     case(ALLERGENEENTHALTEN):
                         OutputEventCollection outputEventCollectionAllergeneEnthalten = new OutputEventCollection(this, ALLERGENEENTHALTEN, automatPlaceHolder.getAutomat().getVorhandeneAllergene());
@@ -52,8 +63,8 @@ public class InputEventListenerStringImpl {
                         this.outputEventHandlerCollection.handle(outputEventCollectionAllergeneNichtEnthalten);
                         break;
                     case(KUCHEN):
-                        OutputEventCollection outputEventCollectionKuchen = new OutputEventCollection(this, KUCHEN, Arrays.asList(automatPlaceHolder.getAutomat().getCakeList()));
-                        this.outputEventHandlerCollection.handle(outputEventCollectionKuchen );
+                        OutputEventCakeList outputEventCakeList = new  OutputEventCakeList(this, KUCHEN, (automatPlaceHolder.getAutomat().getCakeList()));
+                        this. outputEventHandlerCakeList.handle(outputEventCakeList );
                         break;
                 }
 

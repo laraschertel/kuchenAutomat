@@ -15,7 +15,7 @@ public class DeleteOldestDateCakeThread extends Thread {
     }
 
     public void run(){
-        while (true) {
+         while (true) {
             synchronized (this.automatSimulation) {
                 try {
                     if(!this.automatSimulation.isEmpty()) {
@@ -26,6 +26,8 @@ public class DeleteOldestDateCakeThread extends Thread {
                 }
             }
         }
+
+
 
     }
 

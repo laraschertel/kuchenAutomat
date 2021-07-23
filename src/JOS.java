@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 
 public class JOS {
 
@@ -25,8 +26,8 @@ public class JOS {
         automatSave.addHersteller(h1);
         automatSave.addHersteller(h2);
 
-        Cake obstkuchen = new ObstkuchenImpl(h1, BigDecimal.valueOf(3), 210, Duration.ofDays(2), Collections.singleton(Allergen.Erdnuss), new Date(), -1, new Date(), "berry");
-        Cake kremkuchen = new KremkuchenImpl(h2, BigDecimal.valueOf(3), 210, Duration.ofDays(2), Collections.singleton(Allergen.Erdnuss), new Date(), -1, new Date(), "quark");
+        KuchenKomponent obstkuchen = new KuchenBoden(Kuchentyp.OBSTKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten));
+        KuchenKomponent kremkuchen = new KuchenBoden(Kuchentyp.KREMKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten));
 
         automatSave.addKuchen(obstkuchen);
         automatSave.addKuchen(kremkuchen);
@@ -48,6 +49,10 @@ public class JOS {
         System.out.println(automatPlaceHolder.getAutomat().getCakeList()[0]);
         System.out.println(automatPlaceHolder.getAutomat().getCakeList()[1]);
 
+
+
     }
+
+
 
 }

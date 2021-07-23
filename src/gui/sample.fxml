@@ -15,7 +15,7 @@
              <RadioButton fx:id="obstkuchenButton" text="Obstkuchen" toggleGroup="$cakeTypeToggleGroup" onAction="#selectCakeType"/>
              <RadioButton fx:id="obsttorteButton" text="Obsttorte" toggleGroup="$cakeTypeToggleGroup" onAction="#selectCakeType"/>
         </VBox>
-        <TextField fx:id="herstellerNameField" layoutX="10.0" layoutY="90.0" onAction="#onAddCake" promptText="Hersteller"  GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="herstellerNameField" layoutX="10.0" layoutY="90.0" promptText="Hersteller"  GridPane.columnIndex="0" GridPane.rowIndex="1"/>
         <Label fx:id="allergenen" text="Allergenen:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
         <CheckBox fx:id="erdnuss" text="Erdnuss" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <CheckBox fx:id="gluten" text="Gluten" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -24,24 +24,54 @@
         <TextField fx:id="naehrwertTextField" layoutX="10.0" layoutY="90.0" promptText="Naehrwert" GridPane.columnIndex="0" GridPane.rowIndex="6" />
         <TextField fx:id="haltbarkeitTextField" layoutX="10.0" layoutY="90.0" promptText="Haltbarkeit in Tagen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         <TextField fx:id="preisTextField" layoutX="10.0" layoutY="90.0" promptText="Preis" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <TextField fx:id="obstsortTextField" layoutX="10.0" layoutY="90.0" promptText="Obst" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-        <TextField fx:id="kremsortTextField" layoutX="10.0" layoutY="90.0" promptText="Kreme" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <TextField fx:id="nameTextField" layoutX="10.0" layoutY="90.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="7" />
         <Button fx:id="addCake" onAction="#onAddCake" text="add cake" GridPane.rowIndex="10" />
         <Label fx:id="message"  GridPane.columnIndex="0"  GridPane.rowIndex="14" />
         <TextField fx:id="fachnummerToRemoveTextField" layoutX="10.0" layoutY="90.0" promptText="Fachnummer des zum loschenden Kuchen" GridPane.columnIndex="0" GridPane.rowIndex="12" />
-        <Button fx:id="removeCake" onAction="#onRemoveCake" text="remove cake" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-        </children>
+        <Button fx:id="removeCake" onAction="#onInspectCake" text="remove cake" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+        <TextField fx:id="fachnummerToInspectTextField" layoutX="10.0" layoutY="90.0" promptText="Fachnummer des zum inspezierten Kuchen" GridPane.columnIndex="0" GridPane.rowIndex="13" />
+        <Button fx:id="inspectCake" onAction="#onInspectCake" text="inspect cake" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+        <TextField fx:id="herstellerTextField" layoutX="10.0" layoutY="90.0" promptText="add Hersteller" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+        <Button fx:id="addHersteller" onAction="#onAddHersteller" text="add Hersteller" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+        <Button fx:id="removeHersteller" onAction="#onRemoveHersteller" text="remove Hersteller" GridPane.columnIndex="2" GridPane.rowIndex="14" />
+        <Button fx:id="allergeneEnthalten" onAction="#allergeneEnthalten" text="enthaltende Allergene" GridPane.columnIndex="0" GridPane.rowIndex="15" />
+        <Button fx:id="allergemeNichtEnthalten" onAction="#allergeneNichtEnthalten" text="nicht enthaltende Allergene" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+        <Label fx:id="allergenenEnthaltenLabel" GridPane.columnIndex="0" GridPane.rowIndex="18" />
+        <Label fx:id="allergenenNichtEntaltenLabel"  GridPane.columnIndex="1" GridPane.rowIndex="18" />
+        <Button fx:id="saveJOSButton" onAction="#saveJOS" text="saveJOS" GridPane.columnIndex="0" GridPane.rowIndex="16" />
+        <Button fx:id="loadJOSButton" onAction="#loadJOS" text="loadJOS" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+        <Label fx:id="ListenLabel" text="Listen:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <fx:define>
+            <ToggleGroup fx:id="cakeListToggleGroup"/>
+        </fx:define>
+        <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <RadioButton fx:id="allListRadioButton" text="All" toggleGroup="$cakeListToggleGroup" selected="true" onAction="#onListCakes"/>
+            <RadioButton fx:id="kremkuchenListRadioButton" text="Kremkuchen" toggleGroup="$cakeListToggleGroup" onAction="#onListCakes"/>
+            <RadioButton fx:id="obstkuchenListRadioButton" text="Obstkuchen" toggleGroup="$cakeListToggleGroup" onAction="#onListCakes"/>
+            <RadioButton fx:id="obsttorteListRadioButton" text="Obsttorte" toggleGroup="$cakeListToggleGroup" onAction="#onListCakes"/>
+        </VBox>
+    </children>
     </GridPane>
    </left>
     <center>
         <TableView fx:id="kuchenTableView"  GridPane.columnIndex="2">
             <columns>
-                <TableColumn fx:id="fachnummerColumm" text="Fachnummer" resizable="false"/>
-                <TableColumn fx:id="herstellerColumm" text="Hersteller" resizable="false" />
-                <TableColumn fx:id="inspektionsdatumColumm" text="Inspektionsdatum" resizable="false" />
-                <TableColumn fx:id="haltbarkeitColumm" text="Haltbarkeit in Tagen" resizable="false" />
+                <TableColumn fx:id="fachnummerColumm" text="Fachnummer" resizable="true"/>
+                <TableColumn fx:id="kuchentypColumm" text="Kuchentyp" resizable="true"/>
+                <TableColumn fx:id="herstellerColumm" text="Hersteller" resizable="true" />
+                <TableColumn fx:id="inspektionsdatumColumm" text="Inspektionsdatum" resizable="true" />
+                <TableColumn fx:id="haltbarkeitColumm" text="Verbliebene Haltbarkeit in Tagen" resizable="true" />
+
             </columns>
         </TableView>
     </center>
+    <right>
+        <TableView fx:id="herstellerTableView"  GridPane.columnIndex="2">
+            <columns>
+                <TableColumn fx:id="herstellerNameColumm" text="Hersteller" resizable="true" />
+                <TableColumn fx:id="kuchenAnzahlColumm" text="Anzahl der Kuchen" resizable="true" />
+            </columns>
+        </TableView>
+    </right>
 </BorderPane>
 

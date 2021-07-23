@@ -1,6 +1,7 @@
 package gui;
 
 import automat.*;
+import io.JOSPersistence;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,15 +10,19 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class Controller {
 
-    AutomatVerwaltung automat;
+    AutomatVerwaltung automatVerwaltung;
+    AutomatPlaceHolder automat;
+    JOSPersistence persistence;
 
 
     @FXML
@@ -43,19 +48,39 @@ public class Controller {
     @FXML
     private TextField preisTextField;
     @FXML
-    private TextField obstsortTextField;
-    @FXML
-    private TextField kremsortTextField;
+    private TextField nameTextField;
     @FXML
     private TextField fachnummerToRemoveTextField;
     @FXML
-    private Button addButton;
+    private TextField fachnummerToInspectTextField;
     @FXML
-    private Button removeButton;
+    private Button addCakeButton;
+    @FXML
+    private Button removeCakeButton;
+    @FXML
+    private Button inspectButton;
+    @FXML
+    private TextField herstellerTextField;
+    @FXML
+    private Button addHersteller;
+    @FXML
+    private Button removeHersteller;
+    @FXML
+    private Button allergeneEnthalten;
+    @FXML
+    private Button allergemeNichtEnthalten;
+    @FXML
+    private Button saveJOSButton;
+    @FXML
+    private Button loadJOSButton;
     @FXML
     private ListView cakeListView;
     @FXML
     private Label message;
+    @FXML
+    private Label allergenenEnthaltenLabel;
+    @FXML
+    private Label allergenenNichtEntaltenLabel;
     @FXML
     private TableView<KuchenTabelle> kuchenTableView;
     @FXML
@@ -65,21 +90,48 @@ public class Controller {
     @FXML
     private TableColumn<KuchenTabelle, String> inspektionsdatumColumm;
     @FXML
+    private TableColumn<KuchenTabelle, String> kuchentypColumm;
+    @FXML
     private TableColumn<KuchenTabelle, Long> haltbarkeitColumm;
+    @FXML
+    private TableView<HerstellerTabelle> herstellerTableView;
+    @FXML
+    private TableColumn<HerstellerTabelle, Integer> kuchenAnzahlColumm;
+    @FXML
+    private TableColumn<HerstellerTabelle, String> herstellerNameColumm;
+    @FXML
+    private RadioButton kremkuchenListRadioButton;
+    @FXML
+    private RadioButton obstkuchenListRadioButton;
+    @FXML
+    private RadioButton obsttorteListRadioButton;
+    @FXML
+    private RadioButton allListRadioButton;
 
 
 
     private StringProperty herstellerName = new SimpleStringProperty();
+    private StringProperty hersteller = new SimpleStringProperty();
     private StringProperty preis = new SimpleStringProperty();
     private StringProperty naehrwert = new SimpleStringProperty();
     private StringProperty haltbarkeit = new SimpleStringProperty();
-    private StringProperty kremSort = new SimpleStringProperty();
-    private StringProperty obstSort = new SimpleStringProperty();
+    private StringProperty name = new SimpleStringProperty();
     private StringProperty fachnummerToRemove = new SimpleStringProperty();
-    private ObservableList<KuchenTabelle> tabelleItems;
+    private StringProperty fachnummerToInspect = new SimpleStringProperty();
+    private ObservableList<KuchenTabelle> tabelleKuchenItems;
+    private ObservableList<HerstellerTabelle> herstellerTabelleItems;
+
 
     public String getHerstellerName() {
         return herstellerName.get();
+    }
+
+    public String getHersteller(){
+        return hersteller.get();
+    }
+
+    public void setHersteller(String hersteller){
+        this.hersteller.set(hersteller);
     }
 
     public void setHerstellerName(String herstellerName) {
@@ -135,87 +187,87 @@ public class Controller {
         this.fachnummerToRemove.set(fachnummerToRemove);
     }
 
-
-    public String getKremSort() {
-        return kremSort.get();
+    public String getFachnummerToInspect() {
+        return fachnummerToInspect.get();
     }
 
-    public StringProperty kremSortProperty() {
-        return kremSort;
+    public StringProperty fachnummerToInspectProperty() {
+        return fachnummerToInspect;
     }
 
-    public void setKremSort(String kremSort) {
-        this.kremSort.set(kremSort);
-    }
-
-    public String getObstSort() {
-        return obstSort.get();
-    }
-
-    public StringProperty obstSortProperty() {
-        return obstSort;
-    }
-
-    public void setObstSort(String obstSort) {
-        this.obstSort.set(obstSort);
+    public void setFachnummerToInspect(String fachnummerToInspect) {
+        this.fachnummerToInspect.set(fachnummerToInspect);
     }
 
 
+    public String getName() {
+        return name.get();
+    }
 
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
+    }
 
     private String CAKEADDED = "Kuchen wurde hinzugefügt";
     private String CAKEADDEDERROR = "Kuchen könnte nicht hinzugefügt werden";
     private String CAKEREMOVED = "Kuchen wurde geloscht";
     private String CAKEAREMOVEDERROR = "Kuchen könnte nicht geloscht werden";
+    private String HERSTELLERADDED = "Hersteller wurde hinzugefügt";
+    private String HERSTELLERADDEDERROR = "Hersteller könnte nicht hinzugefügt werden";
+    private String  HERSTELLERREMOVED = "Hersteller wurde geloscht";
+    private String HERSTELLERREMOVEDERROR = "Hersteller könnte nicht geloscht werden";
+    private String CAKEINSPECTED = "Kuchen wurde inspiziert";
+
 
 
 
     @FXML private void initialize() throws AutomatException {
-        this.automat =  new AutomatVerwaltung(20);
-        this.automat.addHersteller(new HerstellerImpl("h1"));
-        this.automat.addHersteller(new HerstellerImpl("h2"));
+        this.automatVerwaltung =  new AutomatVerwaltung(20);
+        this.automat = new AutomatPlaceHolder(automatVerwaltung);
+        this.persistence = new JOSPersistence(automat);
         this.herstellerNameField.textProperty().bindBidirectional(this.herstellerName);
+        this.herstellerTextField.textProperty().bindBidirectional(this.hersteller);
         this.preisTextField.textProperty().bindBidirectional(this.preis);
         this.naehrwertTextField.textProperty().bindBidirectional(this.naehrwert);
         this.haltbarkeitTextField.textProperty().bindBidirectional(this.haltbarkeit);
-        this.kremsortTextField.textProperty().bindBidirectional(this.kremSort);
-        this.obstsortTextField.textProperty().bindBidirectional(this.obstSort);
+        this.nameTextField.textProperty().bindBidirectional(this.name);
         this.fachnummerToRemoveTextField.textProperty().bindBidirectional(fachnummerToRemove);
+        this.fachnummerToInspectTextField.textProperty().bindBidirectional(fachnummerToInspect);
 
-        tabelleItems = FXCollections.observableArrayList();
+        herstellerTabelleItems = FXCollections.observableArrayList();
+        tabelleKuchenItems = FXCollections.observableArrayList();
+
+        herstellerNameColumm.setCellValueFactory(new PropertyValueFactory<HerstellerTabelle, String>("herstellerName"));
+        kuchenAnzahlColumm.setCellValueFactory(new PropertyValueFactory<HerstellerTabelle, Integer>("kuchenAnzahl"));
+
+
         fachnummerColumm.setCellValueFactory(new PropertyValueFactory<KuchenTabelle, Integer>("fachnummer"));
         herstellerColumm.setCellValueFactory(new PropertyValueFactory<KuchenTabelle, String>("herstellerName"));
         inspektionsdatumColumm.setCellValueFactory(new PropertyValueFactory<KuchenTabelle, String>("inspektionsdatum"));
         haltbarkeitColumm.setCellValueFactory(new PropertyValueFactory<KuchenTabelle,Long>("haltbarkeit"));
-        kuchenTableView.setItems(tabelleItems);
+        kuchentypColumm.setCellValueFactory(new PropertyValueFactory<KuchenTabelle, String>("kuchentyp"));
+        kuchenTableView.setItems(tabelleKuchenItems);
+        herstellerTableView.setItems(herstellerTabelleItems);
 
 
-        kremsortTextField.setDisable(false);
-        obstsortTextField.setDisable(false);
 
     }
 
     @FXML
-    public String selectCakeType() {
+    public Kuchentyp selectCakeType() {
 
        if (obstkuchenButton.isSelected()) {
-            kremsortTextField.setDisable(true);
-            obstsortTextField.setDisable(false);
-           String obstsorte = obstsortTextField.getText();
-            return "Obstkuchen";
+            return Kuchentyp.OBSTKUCHEN;
 
         } else if (kremkuchenButton.isSelected()) {
-           obstsortTextField.setDisable(true);
-           kremsortTextField.setDisable(false);
-            String kremsorte = kremsortTextField.getText();
-            return "Kremkuchen";
+            return Kuchentyp.KREMKUCHEN;
 
         } else if (obsttorteButton.isSelected()) {
-            String obstsorte = obstsortTextField.getText();
-            String kremsorte = kremsortTextField.getText();
-           obstsortTextField.setDisable(false);
-           kremsortTextField.setDisable(false);
-           return "Obsttorte";
+           return Kuchentyp.OBSTTORTE;
         }
 
        return null;
@@ -227,8 +279,7 @@ public class Controller {
     public void onAddCake() throws InterruptedException, AutomatException {
 
             try {
-
-               String caketype = selectCakeType();
+               Kuchentyp kuchentyp= selectCakeType();
 
                 Collection<Allergen> allergenCollection = new LinkedList<>();
 
@@ -245,17 +296,11 @@ public class Controller {
                     allergenCollection.add(Allergen.Sesamsamen);
                 }
 
-                if (caketype == "Obstkuchen") {
-                    Cake obstkuchen = new ObstkuchenImpl(new HerstellerImpl(getHerstellerName()), new BigDecimal(getPreis()), Integer.parseInt(getNaehrwert()), Duration.ofDays(Long.parseLong(getHaltbarkeit())), allergenCollection, new Date(), -1, new Date(), getObstSort());
-                    this.automat.addKuchen(obstkuchen);
-                } else if (caketype == "Kremkuchen") {
-                    Cake kremkuchen = new KremkuchenImpl(new HerstellerImpl(getHerstellerName()), new BigDecimal(getPreis()), Integer.parseInt(getNaehrwert()), Duration.ofDays(Long.parseLong(getHaltbarkeit())), allergenCollection, new Date(), -1, new Date(), getKremSort());
-                    this.automat.addKuchen(kremkuchen);
-                } else if (caketype == "Obsttorte") {
-                    Cake obsttorte = new ObsttorteImpl(new HerstellerImpl(getHerstellerName()), new BigDecimal(getPreis()), Integer.parseInt(getNaehrwert()), Duration.ofDays(Long.parseLong(getHaltbarkeit())), allergenCollection, new Date(), -1, new Date(), getObstSort(), getKremSort());
-                    this.automat.addKuchen(obsttorte);
-                }
+                KuchenKomponent kuchenBoden = new KuchenBoden(kuchentyp, new HerstellerImpl(getHerstellerName()), BigDecimal.valueOf(0), 0, Duration.ofDays(1000), new HashSet<>());
+                KuchenKomponent kuchenBelag = new KuchenBelag(kuchenBoden, new BigDecimal(getPreis()), Integer.parseInt(getNaehrwert()), Duration.ofDays(Long.parseLong(getHaltbarkeit())), allergenCollection, getName());
+                this.automat.getAutomat().addKuchen(kuchenBelag);
 
+                
                 herstellerNameField.clear();
                 preisTextField.clear();
                 naehrwertTextField.clear();
@@ -264,13 +309,13 @@ public class Controller {
                 gluten.setSelected(false);
                 seasem.setSelected(false);
                 haselnuss.setSelected(false);
-                obstsortTextField.clear();
-                kremsortTextField.clear();
+                nameTextField.clear();
 
                 message.setTextFill(Color.GREEN);
                 message.setText(CAKEADDED);
 
                 onListCakes();
+                onListHersteller();
 
             } catch (Exception e) {
                 message.setTextFill(Color.RED);
@@ -283,7 +328,7 @@ public class Controller {
     public void onRemoveCake() throws InterruptedException, AutomatException {
 
         try {
-            this.automat.removeKuchen(Integer.parseInt(getFachnummerToRemove()));
+            this.automat.getAutomat().removeKuchen(Integer.parseInt(getFachnummerToRemove()));
             onListCakes();
             fachnummerToRemoveTextField.clear();
             message.setTextFill(Color.GREEN);
@@ -296,29 +341,132 @@ public class Controller {
 
     }
 
+    @FXML
+    public void onInspectCake() {
+        try {
+            this.automat.getAutomat().inspectCake(Integer.parseInt(getFachnummerToInspect()));
+            onListCakes();
+            fachnummerToInspectTextField.clear();
+            message.setTextFill(Color.GREEN);
+            message.setText(CAKEINSPECTED);
+        } catch (Exception e){
+            message.setTextFill(Color.RED);
+            message.setText(CAKEAREMOVEDERROR);
+        }
+    }
+
+
+    @FXML
     private void onListCakes() throws AutomatException {
 
-        KuchenTabelle cakeTabelle;
-        tabelleItems.clear();
+        KuchenTabelle cakeTabelle = null;
+        tabelleKuchenItems.clear();
 
-        for (int i = 0; i < automat.getCakeList().length; i++) {
+            if (allListRadioButton.isSelected()) {
+                for (int i = 0; i < automat.getAutomat().getCakeList().length; i++) {
+                    if (this.automat.getAutomat().getCakeList()[i] != null) {
+                        KuchenKomponent cake = this.automat.getAutomat().getCakeList()[i];
+                        cakeTabelle = new KuchenTabelle(cake.getHersteller().getName(), cake.getKuchentyp().toString(), cake.getFachnummer(), cake.getInspektionsdatum().toString(), cake.getVerbliebeneHaltbarkeit().toDays());
+                        if (!tabelleKuchenItems.contains(cakeTabelle)) {
+                            tabelleKuchenItems.add(cakeTabelle);
+                        }
+                    }
 
-            if (this.automat.getCakeList()[i] != null) {
-                Cake cake = this.automat.getCakeList()[i];
-
-                cakeTabelle = new KuchenTabelle(cake.getHersteller().getName(), cake.getFachnummer(), cake.getInspektionsdatum().toString(), cake.getHaltbarkeit().toDays());
-
-                if (!tabelleItems.contains(cakeTabelle)) {
-                    tabelleItems.add(cakeTabelle);
                 }
+            } else if (kremkuchenListRadioButton.isSelected()) {
+                listKuchentyp(Kuchentyp.KREMKUCHEN, cakeTabelle);
+
+            } else if (obstkuchenListRadioButton.isSelected()) {
+                listKuchentyp(Kuchentyp.OBSTKUCHEN, cakeTabelle);
+
+            } else if (obsttorteListRadioButton.isSelected()) {
+                listKuchentyp(Kuchentyp.OBSTTORTE, cakeTabelle);
+
             }
         }
 
 
+    private void listKuchentyp(Kuchentyp kuchentyp, KuchenTabelle cakeTabelle){
+        KuchenKomponent[] kuchenKomponents = automat.getAutomat().getAlleKuchenEinesTyps(kuchentyp.toString());
+        for (int i = 0; i < kuchenKomponents.length; i++) {
+            if (kuchenKomponents[i] != null) {
+                KuchenKomponent cake = kuchenKomponents[i];
+                cakeTabelle = new KuchenTabelle(cake.getHersteller().getName(), cake.getKuchentyp().toString(), cake.getFachnummer(), cake.getInspektionsdatum().toString(), cake.getVerbliebeneHaltbarkeit().toDays());
+                if (!tabelleKuchenItems.contains(cakeTabelle)) {
+                    tabelleKuchenItems.add(cakeTabelle);
+                }
+            }
+        }
+    }
 
+     @FXML
+        private void onListHersteller() throws AutomatException {
+
+         HerstellerTabelle herstellerTabelle;
+         herstellerTabelleItems.clear();
+
+         for (Hersteller hersteller : this.automat.getAutomat().getHerstellerListMitKuchenAnzahl().keySet()) {
+             String herstellername = hersteller.getName();
+             int anzahlKuchen = this.automat.getAutomat().getHerstellerListMitKuchenAnzahl().get(hersteller);
+
+             herstellerTabelle = new HerstellerTabelle(herstellername,anzahlKuchen);
+
+             if (!herstellerTabelleItems.contains(herstellerTabelle)) {
+                 herstellerTabelleItems.add(herstellerTabelle);
+             }
+         }
 
     }
 
+         public void onAddHersteller () {
 
+        try{
+            Hersteller h = new HerstellerImpl(getHersteller());
+            this.automat.getAutomat().addHersteller(h);
+            onListHersteller();
+            herstellerTextField.clear();
+            message.setTextFill(Color.GREEN);
+            message.setText(HERSTELLERADDED);
+
+        } catch (AutomatException e) {
+            message.setTextFill(Color.RED);
+            message.setText(HERSTELLERADDEDERROR); }
+
+         }
+
+    public void onRemoveHersteller() {
+
+        try {
+            this.automat.getAutomat().removeHersteller(getHersteller());
+            onListHersteller();
+            herstellerTextField.clear();
+            message.setTextFill(Color.GREEN);
+            message.setText(HERSTELLERREMOVED);
+
+        } catch (AutomatException e) {
+            message.setTextFill(Color.RED);
+            message.setText(HERSTELLERREMOVEDERROR); }
+    }
+
+    public void allergeneEnthalten() {
+        EnumSet<Allergen>  allergens = this.automat.getAutomat().getVorhandeneAllergene();
+        this.allergenenEnthaltenLabel.setText(allergens.toString());
+    }
+
+    public void allergeneNichtEnthalten() {
+        EnumSet<Allergen>  allergens = this.automat.getAutomat().getNichtVorhandeneAllergene();
+        this.allergenenNichtEntaltenLabel.setText(allergens.toString());
+    }
+
+    public void saveJOS() throws IOException {
+        persistence.serialize();
+    }
+
+    public void loadJOS() throws AutomatException, IOException {
+        persistence.deserialize();
+        onListHersteller();
+        onListCakes();
+    }
 }
+
 

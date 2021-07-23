@@ -8,14 +8,14 @@ import java.util.Date;
 
 public abstract class Cake implements Verkaufsobjekt, Kuchen, Serializable {
 
-    private Hersteller hersteller;
-    private Collection<Allergen> allergen;
-    private int naehrwert;
-    private Duration haltbarkeit;
-    private BigDecimal preis;
+    private final Hersteller hersteller;
+    private final Collection<Allergen> allergen;
+    private final int naehrwert;
+    private final Duration haltbarkeit;
+    private final BigDecimal preis;
     private Date inspektionsdatum;
     private int fachnummer;
-    private Date einfügedatum;
+    private final Date einfügedatum;
 
     public Cake(Hersteller hersteller, BigDecimal preis, int naehrwert, Duration haltbarkeit, Collection<Allergen> allergen, Date inspektionsdatum, int fachnummer, Date einfügedatum) {
         this.hersteller = hersteller;
@@ -47,6 +47,12 @@ public abstract class Cake implements Verkaufsobjekt, Kuchen, Serializable {
         return this.haltbarkeit;
     }
 
+    public Duration getVerbliebeneHaltbarkeit(){
+        long diff = new Date().getTime() - einfügedatum.getTime();
+        diff = (diff / (1000 * 60 * 60 * 24));
+        return this.haltbarkeit.minusDays(diff);
+    }
+
     @Override
     public BigDecimal getPreis() {
         return this.preis;
@@ -62,7 +68,7 @@ public abstract class Cake implements Verkaufsobjekt, Kuchen, Serializable {
         return this.fachnummer;
     }
 
-    public void setFachnummer(int fachnummer) {
+    void setFachnummer(int fachnummer) {
         this.fachnummer = fachnummer;
 
     }
@@ -75,30 +81,36 @@ public abstract class Cake implements Verkaufsobjekt, Kuchen, Serializable {
         return this.einfügedatum;
     }
 
+    /*
+
     public String toString() {
         String hersteller = this.getHersteller().getName();
         String preis = this.getPreis().toString();
         int naehrwert = this.getNaehrwert();
         String allergene = this.getAllergene().toString();
-        long duration = this.getHaltbarkeit().toDays();
+        long duration = this.getVerbliebeneHaltbarkeit().toDays();
         String inspektion = this.getInspektionsdatum().toString();
         int fachnummer = this.getFachnummer();
         String einfügendatum = this.getEinfuegedatum().toString();
 
-        String cakeString = fachnummer + 1 + ". Hersteller: " + hersteller + ", preis: " + preis + ", Naehrwert: " + naehrwert + ", Allergene: " + allergene + ", Haltbarkeit in Tagen: " + duration + ", Inpektionsdatum:  " + inspektion + ", Fachnummer: " + fachnummer + ", Einfügedatum: " + einfügendatum;
+        String cakeString = fachnummer +  this.getFachnummer() + ". Hersteller: " + this.getHersteller().getName() + ", preis: " + this.getPreis().toString() + ", Naehrwert: " + this.getNaehrwert() + ", Allergene: " + this.getAllergene().toString() + ", Haltbarkeit in Tagen: " + duration + ", Inpektionsdatum:  " + inspektion + ", Fachnummer: " + fachnummer + ", Einfügedatum: " + einfügendatum;
 
-        if (this instanceof ObstkuchenImpl) {
-            String obstsorte = ((ObstkuchenImpl) this).getObstsorte();
+        if (this instanceof ObstkuchenOldImpl) {
+            String obstsorte = ((ObstkuchenOldImpl) this).getObstsort();
             cakeString += ", Obtsorte: " + obstsorte;
-        } else if (this instanceof KremkuchenImpl) {
-            String kremsorte = (((KremkuchenImpl) this).getKremsorte());
+        } else if (this instanceof KremkuchenOldImpl) {
+            String kremsorte = (((KremkuchenOldImpl) this).getKremsort());
             cakeString += ", Kremsorte:  " + kremsorte;
-        } else if (this instanceof ObsttorteImpl) {
-            String obstsorte = ((ObsttorteImpl) this).getObstsorte();
-            String kremsorte = (((ObsttorteImpl) this).getKremsorte());
+        } else if (this instanceof ObsttorteOldImpl) {
+            String obstsorte = ((ObsttorteOldImpl) this).getObstsort();
+            String kremsorte = (((ObsttorteOldImpl) this).getObstsort());
             cakeString += ", Obtsorte: " + obstsorte + ", Kremsorte:  " + kremsorte;
         }
         return cakeString;
 
     }
+
+     */
+
+
 }

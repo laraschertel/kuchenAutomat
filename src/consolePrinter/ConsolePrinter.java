@@ -1,22 +1,25 @@
 package consolePrinter;
 
 import automat.*;
+import events.OutputEventCakeList;
 import events.OutputEventCollection;
+import events.OutputEventHerstellerMap;
 import events.OutputEventString;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class ConsolePrinter implements Serializable {
 
-    public void printHerstellerList(OutputEventCollection outputEventCollection) {
+    public void printHerstellerHashMap(OutputEventHerstellerMap outputEventHerstellerMap) {
 
-        Object[] objectsArray = outputEventCollection.getCollection().toArray();
+        HashMap<Hersteller, Integer> herstellerHashMap = outputEventHerstellerMap.getHerstellerHashMap();
 
         try {
-            for (Object o : objectsArray) {
-                Hersteller h = (Hersteller) o;
-                System.out.println(h.getName());
-
+            for (Hersteller hersteller : herstellerHashMap.keySet()) {
+                String herstellername = hersteller.getName();
+                String anzahlKuchen = herstellerHashMap.get(hersteller).toString();
+                System.out.println(herstellername + ": " + anzahlKuchen);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,15 +41,13 @@ public class ConsolePrinter implements Serializable {
     }
 
 
-    public void printKuchenList(OutputEventCollection outputEventCollection) {
+    public void printKuchenList(OutputEventCakeList outputEventCakeList) {
 
-        Object[] objectsArray = outputEventCollection.getCollection().toArray();
+        KuchenKomponent[] kuchenKomponents = outputEventCakeList.getKuchenKomponents();
 
         try {
-            for (Object o : objectsArray) {
-               if(o != null){
-                Cake cake = (Cake) o;
-                printCake(cake);
+            for (KuchenKomponent cake : kuchenKomponents) {
+               if(cake != null){ System.out.println(cake.toString());
                }
             }
         } catch (Exception e) {
@@ -55,11 +56,20 @@ public class ConsolePrinter implements Serializable {
     }
 
 
-    public void printCake(Cake cake){
+    public void printKuchentypList(OutputEventCollection outputEventCollection, String kuchentyp) {
 
-        System.out.println(cake.toString());
+        Object[] objectsArray = outputEventCollection.getCollection().toArray();
 
-
+        try {
+            for (Object o : objectsArray) {
+                if(o != null){
+                    KuchenKomponent cake = (KuchenKomponent) o;
+                    System.out.println(cake.toString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void printString(OutputEventString outputEventString){

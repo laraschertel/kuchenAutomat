@@ -10,7 +10,7 @@ public class DeleteMoreCakesThread extends Thread {
         this.automatSimulation = automatVerwaltungSimulation;
     }
 
-    public void run(){
+    public void run() {
         while (true) {
             synchronized (this.automatSimulation) {
                 try {
@@ -24,5 +24,6 @@ public class DeleteMoreCakesThread extends Thread {
         }
 
     }
+
 
 }

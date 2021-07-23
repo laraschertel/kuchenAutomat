@@ -32,5 +32,7 @@ public class Simulation2 {
         deleteOldestDateCakeThread.start();
         inspectRandomCakeThread.start();
 
+
+
     }
 }

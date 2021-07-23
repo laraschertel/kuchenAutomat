@@ -102,12 +102,12 @@ public class AutomatVerwaltungSimulation {
     }
 
 
-    private Cake getRandomCake() {
+    private KuchenKomponent getRandomCake() {
         int randomNum = 1 + (int) (Math.random() * (2));
         if(randomNum ==1) {
-            return new ObstkuchenImpl(getRandomHersteller(), getRandomPreis(), getRandomNaehrwert(), getRandomHaltbarkeit(), getRandomAllergene(), getRandomDate(), -1, new Date(), getRandomObstsorte());
+            return new KuchenBoden(Kuchentyp.OBSTKUCHEN,getRandomHersteller(), getRandomPreis(), getRandomNaehrwert(), getRandomHaltbarkeit(), getRandomAllergene());
         }else {
-            return new KremkuchenImpl(getRandomHersteller(), getRandomPreis(), getRandomNaehrwert(), getRandomHaltbarkeit(), getRandomAllergene(), getRandomDate(), -1, new Date(), getRandomKremsorte());
+            return new KuchenBoden(Kuchentyp.OBSTKUCHEN, getRandomHersteller(), getRandomPreis(), getRandomNaehrwert(), getRandomHaltbarkeit(), getRandomAllergene());
         }
     }
 
@@ -148,6 +148,8 @@ public class AutomatVerwaltungSimulation {
         ms = -946771200000L + (Math.abs(rnd.nextLong()) % (70L * 365 * 24 * 60 * 60 * 1000));
         return new Date(ms);
     }
+
+
 
 
 }

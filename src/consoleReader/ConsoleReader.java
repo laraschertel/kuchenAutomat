@@ -8,10 +8,7 @@ import events.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleReader {
     private final String EINFUEGEMODUS = ":c";
@@ -28,8 +25,8 @@ public class ConsoleReader {
     private final String OBSTKUCHEN = "Obstkuchen";
     private final String KREMKUCHEN = "Kremkuchen";
     private final String OBSTTORTE = "Obsttorte";
-    private final String SAVEJOS = "savejos";
-    private final String LOADJOS = "loadjos";
+    private final String SAVEJOS = "saveJOS";
+    private final String LOADJOS = "loadJOS";
 
 
     private InputEventHandlerInteger integerHandler;
@@ -119,44 +116,77 @@ public class ConsoleReader {
                         } catch (Exception e) {
                             this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR"));
                         }
+                        break;
 
                     case AENDERUNGSMODUS:
                         try {
-                            aendern(text, modus);
+                            if (text != null) {
+                                aendern(text, modus);
+                            }
                         } catch (Exception e) {
                             this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR"));
                         }
+                        break;
                 }
             } while (true);
         }
     }
 
-    public void einfugen(String text, String modus) throws AutomatException {
-        String[] addParts = text.split("\\s+");
-        if (addParts.length == 7 || addParts.length == 8 ) {
-            List<Allergen> allergenLinkedList = new LinkedList<>();
-            String[] allergene = (addParts[5].split(","));
+    public Kuchentyp getKuchentypFromString(String kuchentypString){
+        EnumSet<Kuchentyp> kuchentypEnumSet = EnumSet.allOf(Kuchentyp.class);
+        Object[] kuchentypArrayList = kuchentypEnumSet.toArray();
+        for(int i = 0; i < kuchentypArrayList.length; i++){
+            if(kuchentypString.equalsIgnoreCase(kuchentypArrayList[i].toString())){
+                return (Kuchentyp) kuchentypArrayList[i];
+            }
+        }
+        return null;
+    }
+
+    public EnumSet<Allergen> getaAllergene(String text){
+        EnumSet<Allergen> allergenLinkedList = EnumSet.noneOf(Allergen.class);
+        String[] allergene = (text.split(","));
+        try {
             for (int i = 0; i < allergene.length; i++) {
                 allergenLinkedList.add(Allergen.valueOf(allergene[i]));
+
             }
-            switch (addParts[0]) {
-                case OBSTKUCHEN:
-                    Cake obstkuchen = new ObstkuchenImpl(new HerstellerImpl(addParts[1]), new BigDecimal(addParts[2]), Integer.parseInt(addParts[3]), Duration.ofDays(Long.parseLong(addParts[4])), allergenLinkedList, new Date(), -1, new Date(), addParts[6]);
-                    InputEventCake obstkuchenEvent = new InputEventCake(this, modus, obstkuchen);
-                    if (null != this.cakeHandler) cakeHandler.handle(obstkuchenEvent);
-                    break;
-                case KREMKUCHEN:
-                    Cake kremkuchen = new KremkuchenImpl(new HerstellerImpl(addParts[1]), new BigDecimal(addParts[2]), Integer.parseInt(addParts[3]), Duration.ofDays(Long.parseLong(addParts[4])), allergenLinkedList, new Date(), -1, new Date(), addParts[6]);
-                    InputEventCake kremkuchenEvent = new InputEventCake(this, modus, kremkuchen);
-                    if (null != this.cakeHandler) cakeHandler.handle(kremkuchenEvent);
-                    break;
-                case OBSTTORTE:
-                    Cake obsttorte = new ObsttorteImpl(new HerstellerImpl(addParts[1]), new BigDecimal(addParts[2]), Integer.parseInt(addParts[3]), Duration.ofDays(Long.parseLong(addParts[4])), allergenLinkedList, new Date(), -1, new Date(), addParts[6], addParts[7]);
-                    InputEventCake obsttorteEvent = new InputEventCake(this, modus, obsttorte);
-                    if (null != this.cakeHandler) cakeHandler.handle(obsttorteEvent);
-                    break;
+            return allergenLinkedList;
+        } catch (Exception e){
+           this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR: unkown Allergene"));
+        }
+        return null;
+    }
+
+    public KuchenBoden getKuchenBoden(String text) {
+        String[] addParts = text.split("\\s+");
+        Kuchentyp kuchentyp = getKuchentypFromString(addParts[0]);
+        return new KuchenBoden(kuchentyp, new HerstellerImpl(addParts[1]), BigDecimal.valueOf(0), 0, Duration.ofDays(1000), new HashSet<>());
+    }
+
+    public KuchenBelag getKuchenBelag(KuchenKomponent kuchenKomponent, String text) {
+        String[] addParts = text.split("\\s+");
+        BigDecimal preis = new BigDecimal(addParts[0].replace(',', '.'));
+        EnumSet<Allergen> allergenEnumSet = getaAllergene(addParts[3]);
+        return new KuchenBelag(kuchenKomponent, preis, Integer.parseInt(addParts[1]), Duration.ofDays(Long.parseLong(addParts[2])), allergenEnumSet, addParts[4]);
+    }
+
+    public void einfugen(String text, String modus) throws AutomatException {
+        String[] addParts = text.split("\\s+");
+        if ((addParts.length - 2) % 5 == 0 ) {
+            KuchenBoden kuchenBoden = getKuchenBoden(text);
+            String belagKuchen = addParts[2] + " " + addParts[3] + " " + addParts[4] + " " + addParts[5] + " " + addParts[6];
+            KuchenBelag kuchenBelagTemp = getKuchenBelag(kuchenBoden, belagKuchen);
+            KuchenBelag kuchenBelag = kuchenBelagTemp;
+
+            for(int i = 7; i<addParts.length; i+=5){
+                String belag = addParts[i] + " " + addParts[i+1] + " " + addParts[i+2] + " " + addParts[i+3] + " " + addParts[i+4];
+                kuchenBelag = getKuchenBelag(kuchenBelagTemp, belag);
+                kuchenBelagTemp = kuchenBelag;
             }
-        } else if (addParts.length == 1) {
+            InputEventCake kuchenBelagEvent = new InputEventCake(this, modus, kuchenBelag);
+            if(null != this.cakeHandler) cakeHandler.handle(kuchenBelagEvent);
+        }  else if (addParts.length == 1) {
             Hersteller hersteller = new HerstellerImpl(addParts[0]);
             InputEventHersteller herstellerEvent = new InputEventHersteller(this, modus, hersteller);
             if (null != this.herstellerHandler) herstellerHandler.handle(herstellerEvent);
@@ -165,7 +195,7 @@ public class ConsoleReader {
         }
     }
 
-    public void loeschen(String text, String modus) throws AutomatException, IOException {
+    public void loeschen(String text, String modus) throws AutomatException, IOException, InterruptedException {
         String[] removeParts = text.split("\\s+");
         if (removeParts.length == 1) {
             if (isInteger(removeParts[0])) {
@@ -180,7 +210,7 @@ public class ConsoleReader {
         }
     }
 
-    public void anzeigen(String text, String modus) throws IOException, AutomatException {
+    public void anzeigen(String text, String modus) throws IOException, AutomatException, InterruptedException {
         String[] anzeigeParts = text.split("\\s+");
         switch (anzeigeParts[0]) {
             case (HERSTELLER):
@@ -201,27 +231,21 @@ public class ConsoleReader {
                         break;
                 }
             case (KUCHEN):
-                if(text.length()==2) {
+                if(anzeigeParts.length==1) {
                     InputEventString printKuchenListEvent = new InputEventString(this, modus, anzeigeParts[0]);
                     if (null != this.stringHandler) stringHandler.handle(printKuchenListEvent);
                 }
-                //TODO
-                switch (anzeigeParts[1]) {
-                    case (OBSTKUCHEN):
+                if(anzeigeParts.length==2) {
+                    Kuchentyp kuchentyp = getKuchentypFromString(anzeigeParts[1]);
+                    InputEventString printKuchentypListEvent = new InputEventString(this, modus, "Kuchentyp:"+kuchentyp.toString());
+                    if (null != this.stringHandler) stringHandler.handle(printKuchentypListEvent);
+                    break;
 
-                        break;
-                    case (KREMKUCHEN):
-
-                        break;
-                    case (OBSTTORTE):
-
-                        break;
-            }
+                }
         }
     }
 
-    public void persistenz(String text, String modus) throws IOException, AutomatException {
-        if(text.length()==1) {
+    public void persistenz(String text, String modus) throws IOException, AutomatException, InterruptedException {
             switch (text) {
                 case (SAVEJOS):
                     InputEventString saveJOSEvent = new InputEventString(this, modus, text);
@@ -235,7 +259,7 @@ public class ConsoleReader {
                     this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR: invalid input"));
 
                     break;
-            }
+
         }
 
     }

@@ -22,8 +22,5 @@ public class InputEventString extends InputEvent {
         return this.string=string;
     }
 
-    public Integer getInteger(){
-        return this.integer;
-    }
 
 }

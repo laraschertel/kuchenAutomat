@@ -10,7 +10,7 @@ public class DeleteRandomCakeThread extends Thread {
     }
 
     public void run() {
-        while (true) {
+         while (true) {
             synchronized (this.automatSimulation) {
                 try {
                     if(!this.automatSimulation.isEmpty()) {
@@ -21,6 +21,8 @@ public class DeleteRandomCakeThread extends Thread {
                 }
             }
         }
+
+
 
     }
 }

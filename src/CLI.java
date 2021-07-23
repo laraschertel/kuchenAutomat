@@ -3,28 +3,19 @@ import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import consolePrinter.ConsolePrinter;
 import consoleReader.ConsoleReader;
-import eventListener.InputEventListenerCakeImpl;
-import eventListener.InputEventListenerHerstellerImpl;
-import eventListener.InputEventListenerIntegerImpl;
-import eventListener.InputEventListenerStringImpl;
-import eventHandlers.InputEventHandlerCake;
-import eventHandlers.InputEventHandlerHersteller;
-import eventHandlers.InputEventHandlerInteger;
-import eventHandlers.InputEventHandlerString;
+import eventHandlers.*;
+import eventListener.*;
 import observerPattern.KuchenBeobachter;
-import eventHandlers.OutputEventHandlerCollection;
-import eventHandlers.OutputEventHandlerString;
-import eventListener.OutputEventListenerCollectionImpl;
-import eventListener.OutputEventListenerStringImpl;
 import observerPattern.AllergeneBeobachter;
 import observerPattern.KapazitaetBeobachter;
 
 import java.util.Scanner;
 
-public class App {
+public class CLI {
     public static void main(String[] args) throws AutomatException {
         ConsoleReader r=new ConsoleReader();
         ConsolePrinter cp = new ConsolePrinter();
+        //TODO default eingebenen wennn kein int
         int capacity = readAutomatCapacity("Bitte the gewünschte grosse des Automaten eingeben");
 
         AutomatVerwaltung automat= new AutomatVerwaltung(capacity);
@@ -37,13 +28,17 @@ public class App {
         InputEventHandlerInteger integerHandler = new InputEventHandlerInteger();
         OutputEventHandlerCollection outputCollectionHandler = new OutputEventHandlerCollection();
         OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
+        OutputEventHandlerHerstellerMap outputEventHandlerHerstellerMap = new OutputEventHandlerHerstellerMap();
+        OutputEventHandlerCakeList outputEventHandlerCakeList = new OutputEventHandlerCakeList();
 
         InputEventListenerCakeImpl lCake = new InputEventListenerCakeImpl(automatPlaceHolder);
         InputEventListenerHerstellerImpl lHersteller = new InputEventListenerHerstellerImpl(automatPlaceHolder);
-        InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automatPlaceHolder, outputCollectionHandler, outputEventHandlerString);
+        InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automatPlaceHolder, outputCollectionHandler, outputEventHandlerString, outputEventHandlerHerstellerMap,outputEventHandlerCakeList);
         InputEventListenerIntegerImpl lInteger = new InputEventListenerIntegerImpl(automatPlaceHolder);
         OutputEventListenerCollectionImpl lOutputCollection = new OutputEventListenerCollectionImpl(cp);
         OutputEventListenerStringImpl lOutputString = new OutputEventListenerStringImpl(cp);
+        OutputEventListenerHerstellerMap lOutputHerstellerMap = new OutputEventListenerHerstellerMap(cp);
+        OutputEventListenerCakeList lOutputCakeList = new OutputEventListenerCakeList(cp);
 
         cakeHandler.add(lCake);
         herstellerHandler.add(lHersteller);
@@ -51,10 +46,12 @@ public class App {
         integerHandler.add(lInteger);
         outputCollectionHandler.add(lOutputCollection);
         outputEventHandlerString.add(lOutputString);
+        outputEventHandlerHerstellerMap.add(lOutputHerstellerMap);
+        outputEventHandlerCakeList.add(lOutputCakeList);
 
         KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder, outputEventHandlerString);
         AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
-        KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
+      //  KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
 
         r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputCollectionHandler, outputEventHandlerString);
         r.start();

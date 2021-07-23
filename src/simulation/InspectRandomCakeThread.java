@@ -11,7 +11,9 @@ public class InspectRandomCakeThread extends Thread {
     public InspectRandomCakeThread(AutomatVerwaltungSimulation automatVerwaltungSimulation) {
         this.automatSimulation = automatVerwaltungSimulation;
     }
-    public void run(){
+
+    public void run() {
+
         while (true) {
                 try {
                     if(!this.automatSimulation.isEmpty()) {
@@ -25,4 +27,5 @@ public class InspectRandomCakeThread extends Thread {
             }
         }
     }
+
 }

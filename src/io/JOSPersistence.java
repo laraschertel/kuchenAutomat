@@ -37,7 +37,6 @@ public class JOSPersistence {
 
     }
 
-
     public void deserialize() throws IOException{
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("automat.ser"));
         AutomatVerwaltung automat = null;
@@ -54,6 +53,8 @@ public class JOSPersistence {
 
         this.automatPlaceHolder.setAutomat(automat);
     }
+
+
 
     public void deserialize(ObjectInputStream objectInputStream) throws IOException{
         AutomatVerwaltung automat = null;

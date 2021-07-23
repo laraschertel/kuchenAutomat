@@ -13,17 +13,17 @@ import java.util.Random;
 import automat.*;
 import consolePrinter.ConsolePrinter;
 import eventHandlers.*;
+import eventListener.*;
 import events.InputEventCake;
 import events.InputEventHersteller;
 import events.InputEventInteger;
 import events.OutputEventCollection;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import simulation.AutomatVerwaltungSimulation;
 
 
 public class ListenerTest {
-    ConsolePrinter cp = new ConsolePrinter();
+  /* ConsolePrinter cp = new ConsolePrinter();
     AutomatVerwaltung automat= new AutomatVerwaltung(20);
     AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
     Date inspektionsDate = new Date();
@@ -33,9 +33,9 @@ public class ListenerTest {
     Hersteller hersteller2 = new HerstellerImpl("hersteller2");
 
 
-    Cake berryCake = new ObstkuchenImpl(hersteller1, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten),  getRandomDate(), -1, einfügedatum, "berry");
-    Cake butterCake = new KremkuchenImpl(hersteller2, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten),  getRandomDate(), -1, einfügedatum, "butter");
-    Cake berryCake2 = new ObstkuchenImpl(hersteller1, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten),  getRandomDate(), -1, einfügedatum, "apple");
+    Cake berryCake = new ObstkuchenOldImpl(hersteller1, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten),  getRandomDate(), -1, einfügedatum, "berry");
+    Cake butterCake = new KremkuchenOldImpl(hersteller2, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten),  getRandomDate(), -1, einfügedatum, "butter");
+    Cake berryCake2 = new ObstkuchenOldImpl(hersteller1, BigDecimal.valueOf(3.5), 200, Duration.ofDays(3), Collections.singleton(Allergen.Gluten),  getRandomDate(), -1, einfügedatum, "apple");
 
     OutputEventHandlerCollection outputCollectionHandler = new OutputEventHandlerCollection();
     OutputEventListenerCollectionImpl lOutputCollection = new OutputEventListenerCollectionImpl(cp);
@@ -82,7 +82,7 @@ public class ListenerTest {
     }
 
     @Test
-    public void gutTestAddMehrereKcuhen() throws AutomatException {
+    public void gutTestAddMehrereKuchen() throws AutomatException {
         automatPlaceHolder.getAutomat().addHersteller(hersteller1);
         automatPlaceHolder.getAutomat().addHersteller(hersteller2);
 
@@ -135,6 +135,9 @@ public class ListenerTest {
         ms = -946771200000L + (Math.abs(rnd.nextLong()) % (70L * 365 * 24 * 60 * 60 * 1000));
         return new Date(ms);
     }
+
+
+ */
 
 
 }
