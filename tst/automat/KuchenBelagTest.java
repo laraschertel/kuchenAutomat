@@ -72,6 +72,13 @@ class KuchenBelagTest {
     }
 
     @Test
+    void setFachnummerBad() {
+        o1.setFachnummer(-1);
+
+        Assertions.assertEquals(0, o1.getFachnummer());
+    }
+
+    @Test
     void setEinfuegeDatum() {
         Date date = new GregorianCalendar(2021, Calendar.JULY, 20).getTime();
         o1.setEinfuegeDatum(date);

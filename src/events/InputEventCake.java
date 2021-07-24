@@ -1,6 +1,5 @@
 package events;
 
-import automat.Cake;
 import automat.KuchenKomponent;
 
 public class InputEventCake extends InputEvent {

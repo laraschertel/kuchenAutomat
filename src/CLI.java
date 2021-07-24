@@ -5,9 +5,8 @@ import consolePrinter.ConsolePrinter;
 import consoleReader.ConsoleReader;
 import eventHandlers.*;
 import eventListener.*;
-import observerPattern.KuchenBeobachter;
-import observerPattern.AllergeneBeobachter;
-import observerPattern.KapazitaetBeobachter;
+import automat.AllergeneBeobachter;
+import automat.KapazitaetBeobachter;
 
 import java.util.Scanner;
 
@@ -53,8 +52,9 @@ public class CLI {
         AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
       //  KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
 
-        r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputCollectionHandler, outputEventHandlerString);
-        r.start();
+        r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputEventHandlerString);
+
+        r.readInput();
 
     }
 

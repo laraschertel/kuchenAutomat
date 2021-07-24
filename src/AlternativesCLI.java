@@ -5,9 +5,7 @@ import consolePrinter.ConsolePrinter;
 import consoleReader.ConsoleReader;
 import eventHandlers.*;
 import eventListener.*;
-import observerPattern.AllergeneBeobachter;
-import observerPattern.KapazitaetBeobachter;
-import observerPattern.KuchenBeobachter;
+import automat.KapazitaetBeobachter;
 
 import java.util.Scanner;
 
@@ -52,8 +50,9 @@ public class AlternativesCLI {
         //AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
         //KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
 
-        r.setHandlers(null, stringHandler, cakeHandler, herstellerHandler, null, outputEventHandlerString);
-        r.start();
+        r.setHandlers(null, stringHandler, cakeHandler, herstellerHandler,  outputEventHandlerString);
+
+        r.readInput();
 
     }
 

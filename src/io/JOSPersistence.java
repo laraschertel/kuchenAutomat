@@ -2,11 +2,9 @@ package io;
 
 import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
-import observerPattern.Beobachter;
 
 
 import java.io.*;
-import java.util.LinkedList;
 
 public class JOSPersistence {
     private AutomatPlaceHolder automatPlaceHolder;

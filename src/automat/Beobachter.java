@@ -1,4 +1,4 @@
-package observerPattern;
+package automat;
 
 import automat.AutomatException;
 

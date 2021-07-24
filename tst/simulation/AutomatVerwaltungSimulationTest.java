@@ -2,16 +2,19 @@ package simulation;
 
 import automat.AutomatException;
 import automat.AutomatVerwaltung;
-import automat.Cake;
+import automat.KuchenKomponent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import static org.mockito.Mockito.*;
 
 public class AutomatVerwaltungSimulationTest {
 
-    /*
+
     private AutomatVerwaltung automat;
     private AutomatVerwaltungSimulation automatSimulation;
 
@@ -40,17 +43,12 @@ public class AutomatVerwaltungSimulationTest {
         automatSimulation.addRandomKuchen();
         automatSimulation.addRandomKuchen();
 
-        int oldestInspectedCake = -1;
-
-        if(automat.getCakeList()[0].getInspektionsdatum().before(automat.getCakeList()[1].getInspektionsdatum())){
-            oldestInspectedCake = 0;
-        }else{
-            oldestInspectedCake = 1;
-        }
+        automat.getCakeList()[0].setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 15).getTime());
+        automat.getCakeList()[1].setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 20).getTime());
 
         automatSimulation.deleteOldestInpectedKuchen();
-        Assertions.assertTrue(automat.getCakeList()[oldestInspectedCake] == null);
 
+        Assertions.assertEquals(0, automat.getAvailableFachnummer());
     }
 
     @Test
@@ -59,8 +57,8 @@ public class AutomatVerwaltungSimulationTest {
         AutomatVerwaltung mockAutomat = mock(AutomatVerwaltung.class);
         AutomatVerwaltungSimulation automatSimulation = new AutomatVerwaltungSimulation(mockAutomat);
 
-        Cake mockCake = mock(ObstkuchenOldImpl.class);
-        Cake[] mockCakeList = {mockCake};
+        KuchenKomponent mockCake = mock(KuchenKomponent.class);
+        KuchenKomponent[] mockCakeList = {mockCake};
 
         when(mockAutomat.getCakeList()).thenReturn(mockCakeList);
         when(mockAutomat.getAnzahlKuchenImAutomat()).thenReturn(1);
@@ -83,8 +81,4 @@ public class AutomatVerwaltungSimulationTest {
     public void isEmpty() throws AutomatException {
         Assertions.assertTrue(this.automat.getAnzahlKuchenImAutomat() == 0);
     }
-
-
-     */
-
 }

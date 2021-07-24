@@ -11,47 +11,36 @@ import java.time.Duration;
 import java.util.*;
 
 public class ConsoleReader {
-    private final String EINFUEGEMODUS = ":c";
-    private final String LOESCHMODUS = ":d";
-    private final String ANZEIGEMODUS = ":r";
-    private final String AENDERUNGSMODUS = ":u";
-    private final String PERSISTENZMODUS = ":p";
-    private final String NULL = null;
-    private final String HERSTELLER = "hersteller";
-    private final String ALLERGEN = "allergene";
-    private final String ENTHALTEN = "(i)";
-    private final String NICHENTHALTEN = "(e)";
-    private final String KUCHEN = "kuchen";
-    private final String OBSTKUCHEN = "Obstkuchen";
-    private final String KREMKUCHEN = "Kremkuchen";
-    private final String OBSTTORTE = "Obsttorte";
-    private final String SAVEJOS = "saveJOS";
-    private final String LOADJOS = "loadJOS";
+    private static final String EINFUEGEMODUS = ":c";
+    private static final String LOESCHMODUS = ":d";
+    private static final String ANZEIGEMODUS = ":r";
+    private static final String AENDERUNGSMODUS = ":u";
+    private static final String PERSISTENZMODUS = ":p";
+    private static final String HERSTELLER = "hersteller";
+    private static final String ALLERGEN = "allergene";
+    private static final String ENTHALTEN = "(i)";
+    private static final String NICHENTHALTEN = "(e)";
+    private static final String KUCHEN = "kuchen";
+    private static final String SAVEJOS = "saveJOS";
+    private static final String LOADJOS = "loadJOS";
+    private String modus =  EINFUEGEMODUS;
 
 
     private InputEventHandlerInteger integerHandler;
     private InputEventHandlerString stringHandler;
     private InputEventHandlerCake cakeHandler;
     private InputEventHandlerHersteller herstellerHandler;
-    private OutputEventHandlerCollection outputCollectionHandler;
     private OutputEventHandlerString outputEventHandlerString;
 
 
-    public void setHandlers(InputEventHandlerInteger integerHandler, InputEventHandlerString stringHandler, InputEventHandlerCake cakeHandler, InputEventHandlerHersteller herstellerHandler, OutputEventHandlerCollection outputCollectionHandler, OutputEventHandlerString outputEventHandlerString) {
+    public void setHandlers(InputEventHandlerInteger integerHandler, InputEventHandlerString stringHandler, InputEventHandlerCake cakeHandler, InputEventHandlerHersteller herstellerHandler, OutputEventHandlerString outputEventHandlerString) {
         this.integerHandler = integerHandler;
         this.stringHandler = stringHandler;
         this.cakeHandler = cakeHandler;
         this.herstellerHandler = herstellerHandler;
-        this.outputCollectionHandler = outputCollectionHandler;
         this.outputEventHandlerString = outputEventHandlerString;
     }
 
-
-    private static String readStringFromStdIn() {
-        System.out.print(" ");
-        Scanner myInput = new Scanner(System.in);
-        return myInput.nextLine();
-    }
 
     private boolean isInteger(String input) {
         try {
@@ -62,19 +51,17 @@ public class ConsoleReader {
         }
     }
 
-    public void start() {
-        System.out.println("Wilkommen - Kuchen Automat - Enter a Modus");
-        String modus = ":c";
+    public void readInput() {
         try (Scanner s = new Scanner(System.in)) {
             do {
                 String text = null;
                 String string = s.nextLine();
-                if(string.contains(":")) {
-                    modus = string;
-                }else{
+                if (string.contains(":")) {
+                    this.modus = string;
+                } else {
                     text = string;
                 }
-                switch (modus) {
+                switch (this.modus) {
                     case EINFUEGEMODUS:
                         try {
                             if (text != null) {
@@ -128,7 +115,7 @@ public class ConsoleReader {
                         }
                         break;
                 }
-            } while (true);
+            }while (true);
         }
     }
 
@@ -272,6 +259,10 @@ public class ConsoleReader {
         }else {
             this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR: invalid input"));
         }
+    }
+
+    public String getModus(){
+        return this.modus;
     }
 }
 

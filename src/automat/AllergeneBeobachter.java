@@ -1,9 +1,5 @@
-package observerPattern;
+package automat;
 
-import automat.Allergen;
-import automat.AutomatException;
-import automat.AutomatPlaceHolder;
-import automat.AutomatVerwaltung;
 import eventHandlers.OutputEventHandlerString;
 import events.OutputEventString;
 
@@ -24,7 +20,7 @@ public class AllergeneBeobachter implements Beobachter {
 
     }
     @Override
-    public void aktualisiere() throws AutomatException {
+    public void aktualisiere()  {
         Set<Allergen> newState = automatPlaceHolder.getAutomat().getVorhandeneAllergene();
         if(!alterZustand.containsAll(newState) || !newState.containsAll(alterZustand)) {
             OutputEventString outputEventString = new OutputEventString(this, "Allergene Änderung");

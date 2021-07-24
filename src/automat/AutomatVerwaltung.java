@@ -1,8 +1,5 @@
 package automat;
 
-import observerPattern.Beobachter;
-import observerPattern.Subjekt;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -22,11 +19,12 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
             this.cakeList = new KuchenKomponent[capacity];
 
         } else{
-            throw new AutomatException("Capacity muss großer als 0 sein");
+            throw new AutomatException("Capacity muss groeßer als 0 sein");
         }
     }
 
     public synchronized void addHersteller(Hersteller hersteller) throws AutomatException {
+
 
             if (herstellerExistiert(hersteller.getName())) {
                 throw new AutomatException("Hersteller kannt nicht zwei mal eingefügt werden");
@@ -34,8 +32,7 @@ public class AutomatVerwaltung implements Subjekt, Serializable {
                 herstellerList.add(hersteller);
             }
             this.benachrichtige();
-
-    }
+        }
 
     public synchronized void removeHersteller(String herstellerName) throws AutomatException {
             for (Hersteller her : herstellerList) {

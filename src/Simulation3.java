@@ -2,7 +2,7 @@ import automat.AutomatException;
 import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import consolePrinter.ConsolePrinter;
-import observerPattern.KuchenBeobachter;
+import automat.KuchenBeobachter;
 import eventHandlers.OutputEventHandlerString;
 import eventListener.OutputEventListenerStringImpl;
 import simulation.*;

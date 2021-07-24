@@ -1,10 +1,6 @@
 package simulation;
 
 import automat.AutomatException;
-import automat.AutomatVerwaltung;
-import automat.Cake;
-
-import java.util.Date;
 
 public class DeleteOldestDateCakeThread extends Thread {
 

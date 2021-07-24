@@ -1,8 +1,5 @@
-package observerPattern;
+package automat;
 
-import automat.AutomatException;
-import automat.AutomatPlaceHolder;
-import automat.AutomatVerwaltung;
 import eventHandlers.OutputEventHandlerString;
 import events.OutputEventString;
 

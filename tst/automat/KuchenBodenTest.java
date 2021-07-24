@@ -107,14 +107,6 @@ class KuchenBodenTest {
     }
 
     @Test
-    void getVerbliebeneHaltbarkeitVerschiedeneTagen() {
-        obstkuchen.setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 20).getTime());
-
-        Assertions.assertEquals(1, obstkuchen.getVerbliebeneHaltbarkeit().toDays());
-
-    }
-
-    @Test
     void testToString() {
     }
 }

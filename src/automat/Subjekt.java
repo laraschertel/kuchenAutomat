@@ -1,6 +1,4 @@
-package observerPattern;
-
-import automat.AutomatException;
+package automat;
 
 public interface Subjekt {
     void meldeAn(Beobachter beobachter);
