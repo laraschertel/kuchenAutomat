@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 class KuchenBelagTest {
 
@@ -72,13 +69,6 @@ class KuchenBelagTest {
     }
 
     @Test
-    void setFachnummerBad() {
-        o1.setFachnummer(-1);
-
-        Assertions.assertEquals(0, o1.getFachnummer());
-    }
-
-    @Test
     void setEinfuegeDatum() {
         Date date = new GregorianCalendar(2021, Calendar.JULY, 20).getTime();
         o1.setEinfuegeDatum(date);
@@ -128,6 +118,17 @@ class KuchenBelagTest {
     @Test
     void testToString() {
 
+        EnumSet<Allergen> allergens = EnumSet.noneOf(Allergen.class);
+        allergens.add(Allergen.Gluten);
+        Date date = new GregorianCalendar(2021, Calendar.JULY, 20).getTime();
+        KuchenKomponent kuchenBoden = new KuchenBoden(Kuchentyp.KREMKUCHEN, new HerstellerImpl("h1"), BigDecimal.valueOf(0), 0, Duration.ofDays(1000), new HashSet<>());
+        KuchenKomponent kuchenBelag = new KuchenBelag(kuchenBoden, BigDecimal.valueOf(2.40), 200, Duration.ofDays(10), allergens, "Butter" );
+        kuchenBelag.setEinfuegeDatum(date);
+        kuchenBelag.setInspektionsdatum(date);
+        kuchenBelag.toString();
+        String print =  "0. Kuchentyp: KREMKUCHEN Hersteller: h1, preis: 2.4, Naehrwert: 200, Allergene: [Gluten], Haltbarkeit in Tagen: 6, Inpektionsdatum:  Tue Jul 20 00:00:00 CEST 2021 Einfügedatum: Tue Jul 20 00:00:00 CEST 2021 Belage: Butter";
+
+        Assertions.assertEquals(kuchenBelag.toString(),print);
 
     }
 }

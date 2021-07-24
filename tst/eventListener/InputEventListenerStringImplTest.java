@@ -1,12 +1,10 @@
 package eventListener;
 
 import automat.*;
-import eventHandlers.OutputEventHandlerCakeList;
-import eventHandlers.OutputEventHandlerCollection;
-import eventHandlers.OutputEventHandlerHerstellerMap;
-import eventHandlers.OutputEventHandlerString;
-import events.InputEventString;
-import events.OutputEventHerstellerMap;
+import control.InputEventListenerStringImpl;
+import control.OutputEventHandlerHerstellerMap;
+import control.InputEventString;
+import control.OutputEventHerstellerMap;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

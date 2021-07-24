@@ -1,7 +1,8 @@
 package eventListener;
 
 import automat.*;
-import events.InputEventCake;
+import control.InputEventCake;
+import control.InputEventListenerCakeImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

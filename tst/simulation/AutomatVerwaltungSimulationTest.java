@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class AutomatVerwaltungSimulationTest {
@@ -26,59 +27,91 @@ public class AutomatVerwaltungSimulationTest {
     }
 
     @Test
-    public void addRandomKuchen() throws AutomatException, InterruptedException {
-        automatSimulation.addRandomKuchen();
-        Assertions.assertTrue(automat.getAnzahlKuchenImAutomat() == 1);
-    }
-
-    @Test
-    public void deleteRandomKuchen() throws AutomatException, InterruptedException {
-        automatSimulation.addRandomKuchen();
-        automatSimulation.deleteRandomKuchen();
-        Assertions.assertTrue(automat.getAnzahlKuchenImAutomat() == 0);
-    }
-
-    @Test
-    public synchronized void deleteOldestInpectedKuchen() throws AutomatException, InterruptedException, NullPointerException {
-        automatSimulation.addRandomKuchen();
-        automatSimulation.addRandomKuchen();
-
-        automat.getCakeList()[0].setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 15).getTime());
-        automat.getCakeList()[1].setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 20).getTime());
-
-        automatSimulation.deleteOldestInpectedKuchen();
-
-        Assertions.assertEquals(0, automat.getAvailableFachnummer());
-    }
-
-    @Test
-    public synchronized void inspectRandomKuchen() throws AutomatException,  InterruptedException {
-
-        AutomatVerwaltung mockAutomat = mock(AutomatVerwaltung.class);
-        AutomatVerwaltungSimulation automatSimulation = new AutomatVerwaltungSimulation(mockAutomat);
-
-        KuchenKomponent mockCake = mock(KuchenKomponent.class);
-        KuchenKomponent[] mockCakeList = {mockCake};
-
-        when(mockAutomat.getCakeList()).thenReturn(mockCakeList);
-        when(mockAutomat.getAnzahlKuchenImAutomat()).thenReturn(1);
-
-        automatSimulation.inspectRandomKuchen();
-
-        verify(mockAutomat, times(1)).inspectCake(0);
+    public void addRandomKuchen() {
+        try {
+            automatSimulation.addRandomKuchen();
+            Assertions.assertTrue(automat.getAnzahlKuchenImAutomat() == 1);
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
 
     }
 
     @Test
-    public void isFull() throws AutomatException, InterruptedException {
-        this.automatSimulation.addRandomKuchen();
-        this.automatSimulation.addRandomKuchen();
-
-        Assertions.assertTrue(automat.getAnzahlKuchenImAutomat() == automat.getCakeList().length);
+    public void deleteRandomKuchen(){
+        try {
+            automatSimulation.addRandomKuchen();
+            automatSimulation.deleteRandomKuchen();
+            Assertions.assertTrue(automat.getAnzahlKuchenImAutomat() == 0);
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
     }
 
     @Test
-    public void isEmpty() throws AutomatException {
-        Assertions.assertTrue(this.automat.getAnzahlKuchenImAutomat() == 0);
+    public synchronized void deleteOldestInpectedKuchen(){
+        try {
+            automatSimulation.addRandomKuchen();
+            automatSimulation.addRandomKuchen();
+            automat.getCakeList()[0].setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 15).getTime());
+            automat.getCakeList()[1].setEinfuegeDatum(new GregorianCalendar(2021, Calendar.JULY, 20).getTime());
+
+            automatSimulation.deleteOldestInpectedKuchen();
+
+            Assertions.assertEquals(0, automat.getAvailableFachnummer());
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
+
+    }
+
+    @Test
+    public synchronized void inspectRandomKuchen(){
+        try {
+            AutomatVerwaltung mockAutomat = mock(AutomatVerwaltung.class);
+            AutomatVerwaltungSimulation automatSimulation = null;
+            automatSimulation = new AutomatVerwaltungSimulation(mockAutomat);
+            KuchenKomponent mockCake = mock(KuchenKomponent.class);
+            KuchenKomponent[] mockCakeList = {mockCake};
+
+            when(mockAutomat.getCakeList()).thenReturn(mockCakeList);
+            when(mockAutomat.getAnzahlKuchenImAutomat()).thenReturn(1);
+
+            automatSimulation.inspectRandomKuchen();
+
+            verify(mockAutomat, times(1)).inspectCake(0);
+        } catch (AutomatException | InterruptedException e) {
+            fail();
+        }
+
+    }
+
+    @Test
+    public void isFull(){
+        try {
+            this.automatSimulation.addRandomKuchen();
+            this.automatSimulation.addRandomKuchen();
+            Assertions.assertTrue(automat.getAnzahlKuchenImAutomat() == automat.getCakeList().length);
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
+
+    }
+
+    @Test
+    public void isEmpty() {
+        try {
+            Assertions.assertTrue(this.automat.getAnzahlKuchenImAutomat() == 0);
+        } catch (AutomatException e) {
+            fail();
+        }
     }
 }

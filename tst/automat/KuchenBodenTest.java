@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -108,5 +105,15 @@ class KuchenBodenTest {
 
     @Test
     void testToString() {
+        Date date = new GregorianCalendar(2021, Calendar.JULY, 20).getTime();
+        KuchenKomponent kuchenBoden = new KuchenBoden(Kuchentyp.KREMKUCHEN, new HerstellerImpl("h1"), BigDecimal.valueOf(0), 0, Duration.ofDays(1000), new HashSet<>());
+
+        kuchenBoden.setInspektionsdatum(date);
+        kuchenBoden.setEinfuegeDatum(date);
+
+        kuchenBoden.toString();
+        String print =  "0. Kuchentyp: KREMKUCHEN Hersteller: h1, preis: 0, Naehrwert: 0, Allergene: [], Haltbarkeit in Tagen: 996, Inpektionsdatum:  Tue Jul 20 00:00:00 CEST 2021 Einfügedatum: Tue Jul 20 00:00:00 CEST 2021";
+
+        Assertions.assertEquals(kuchenBoden.toString(),print);
     }
 }

@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Random;
+
 
 public class AutomatVerwaltungSimulation {
     private AutomatVerwaltung automat;
@@ -132,24 +132,5 @@ public class AutomatVerwaltungSimulation {
         return Duration.ofDays(2 + (int) (Math.random() * (3)));
 
     }
-
-    private String getRandomObstsorte() {
-        return randomObstsorteList[(int) (randomObstsorteList.length * Math.random())];
-    }
-
-    private String getRandomKremsorte() {
-        return randomKremsorteList[(int) (randomKremsorteList.length * Math.random())];
-    }
-
-    private Date getRandomDate(){
-        Random rnd;
-        long    ms;
-        rnd = new Random();
-        ms = -946771200000L + (Math.abs(rnd.nextLong()) % (70L * 365 * 24 * 60 * 60 * 1000));
-        return new Date(ms);
-    }
-
-
-
 
 }

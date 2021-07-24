@@ -1,15 +1,12 @@
 package automat;
 
-import eventHandlers.OutputEventHandlerString;
-import events.InputEventString;
-import events.OutputEventString;
+import control.OutputEventHandlerString;
+import control.AllergeneBeobachter;
+import control.OutputEventString;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AllergeneBeobachterTest {

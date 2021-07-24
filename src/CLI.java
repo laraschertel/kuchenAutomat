@@ -2,11 +2,10 @@ import automat.AutomatException;
 import automat.AutomatPlaceHolder;
 import automat.AutomatVerwaltung;
 import consolePrinter.ConsolePrinter;
-import consoleReader.ConsoleReader;
-import eventHandlers.*;
-import eventListener.*;
-import automat.AllergeneBeobachter;
-import automat.KapazitaetBeobachter;
+import control.ConsoleReader;
+import control.*;
+import control.AllergeneBeobachter;
+import control.KapazitaetBeobachter;
 
 import java.util.Scanner;
 
@@ -50,7 +49,7 @@ public class CLI {
 
         KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder, outputEventHandlerString);
         AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
-      //  KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
+
 
         r.setHandlers(integerHandler, stringHandler, cakeHandler, herstellerHandler, outputEventHandlerString);
 

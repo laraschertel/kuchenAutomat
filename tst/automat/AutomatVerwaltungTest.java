@@ -1,5 +1,8 @@
 package automat;
 
+import control.AllergeneBeobachter;
+import control.KapazitaetBeobachter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -8,102 +11,141 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.*;
 
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.*;
 
 public class AutomatVerwaltungTest {
 
-    AutomatVerwaltung automat = new AutomatVerwaltung(20);
-    Date inspektionsDate = new Date();
-    Date einfügedatum = new Date();
+    AutomatVerwaltung automat;
 
-    Hersteller h1 = new HerstellerImpl("hersteller1");
-    Hersteller h2 = new HerstellerImpl("hersteller2");
-    Hersteller h3 = new HerstellerImpl("hersteller3");
+    Hersteller h1;
+    Hersteller h2;
+    Hersteller h3;
 
+    KuchenKomponent obstkuchen;
+    KuchenKomponent kremkuchen;
+    KuchenKomponent kremkuchen2;
 
-    KuchenKomponent obstkuchen = new KuchenBoden(Kuchentyp.OBSTKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten));
-    KuchenKomponent kremkuchen = new KuchenBoden(Kuchentyp.KREMKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten));
-    KuchenKomponent kremkuchen2 = new KuchenBoden(Kuchentyp.KREMKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten) );
+    KuchenKomponent o1;
+    KuchenKomponent k2;
 
-    KuchenKomponent o1 = new KuchenBelag(obstkuchen, BigDecimal.valueOf(1), 50, Duration.ofDays(3),  EnumSet.of(Allergen.Erdnuss), "Creme");
-    KuchenKomponent k2 = new KuchenBelag(kremkuchen, BigDecimal.valueOf(1), 50, Duration.ofDays(3),  EnumSet.of(Allergen.Haselnuss), "Nutella");
+   @BeforeEach
+   public void setUp() throws AutomatException {
+       automat = new AutomatVerwaltung(20);
 
-    public AutomatVerwaltungTest() throws AutomatException {
-    }
+        h1 = new HerstellerImpl("hersteller1");
+        h2 = new HerstellerImpl("hersteller2");
+        h3 = new HerstellerImpl("hersteller3");
+
+       obstkuchen = new KuchenBoden(Kuchentyp.OBSTKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten));
+       kremkuchen = new KuchenBoden(Kuchentyp.KREMKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten));
+       kremkuchen2 = new KuchenBoden(Kuchentyp.KREMKUCHEN, h1,BigDecimal.valueOf(3.5),200, Duration.ofDays(3), EnumSet.of(Allergen.Gluten) );
+
+       o1 = new KuchenBelag(obstkuchen, BigDecimal.valueOf(1), 50, Duration.ofDays(3),  EnumSet.of(Allergen.Erdnuss), "Creme");
+       k2 = new KuchenBelag(kremkuchen, BigDecimal.valueOf(1), 50, Duration.ofDays(3),  EnumSet.of(Allergen.Haselnuss), "Nutella");
+
+   }
 
     @Test
-    public void addHersteller() throws AutomatException {
+    public void addHersteller() {
 
-        automat.addHersteller(h1);
+        try {
+            automat.addHersteller(h1);
+        } catch (AutomatException e) {
+            fail();
+        }
 
         Assertions.assertTrue(automat.getHerstellerList().contains(h1));
 
     }
 
     @Test
-    public void addHerstellerDoppelt() throws AutomatException {
+    public void addHerstellerDoppelt() {
 
-        automat.addHersteller(h1);
+        try {
+            automat.addHersteller(h1);
+        } catch (AutomatException e) {
+            fail();
+        }
 
         Assertions.assertThrows(AutomatException.class, () -> automat.addHersteller(h1));
 
     }
 
     @Test
-    public void removeHersteller() throws AutomatException {
+    public void removeHersteller(){
+        try {
+            automat.addHersteller(h1);
 
-        automat.addHersteller(h1);
+            automat.addHersteller(h2);
 
-        automat.addHersteller(h2);
+            automat.addHersteller(h3);
 
-        automat.addHersteller(h3);
-
-        automat.removeHersteller("hersteller2");
+            automat.removeHersteller("hersteller2");
+        } catch (AutomatException e) {
+            fail();
+        }
 
         Assertions.assertEquals(automat.getHerstellerListMitKuchenAnzahl().size(), 2);
     }
 
     @Test
-    public void addObstkuchen() throws AutomatException, InterruptedException {
+    public void addObstkuchen() {
 
-        automat.addHersteller(h1);
-
-        automat.addKuchen(obstkuchen);
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(obstkuchen);
+        } catch (AutomatException e) {
+           fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
         Assertions.assertEquals(automat.getCakeList()[0], obstkuchen);
 
     }
 
     @Test
-    public void addKremkuchen() throws AutomatException, InterruptedException {
+    public void addKremkuchen() {
 
-        automat.addHersteller(h1);
-
-        automat.addKuchen(o1);
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(o1);
+        } catch (AutomatException | InterruptedException e) {
+            fail();
+        }
 
         Assertions.assertEquals(automat.getCakeList()[0], o1);
     }
 
 
     @Test
-    public void removeKuchen() throws AutomatException, InterruptedException {
+    public void removeKuchen(){
 
-        automat.addHersteller(h1);
-
-        automat.addKuchen(k2);
-        automat.removeKuchen(0);
+       try{
+            automat.addHersteller(h1);
+            automat.addKuchen(k2);
+            automat.removeKuchen(0);
+    } catch (AutomatException | InterruptedException e) {
+        fail();
+    }
 
         Assertions.assertEquals(automat.getCakeList()[0], null);
 
     }
 
     @Test
-    public void inspektionsdatumAlleKuchenAendern() throws AutomatException, InterruptedException {
-        automat.addHersteller(h1);
-        automat.addHersteller(h2);
+    public void inspektionsdatumAlleKuchenAendern() {
 
-
-        automat.addKuchen(o1);
-        automat.addKuchen(k2);
+        try {
+            automat.addHersteller(h1);
+            automat.addHersteller(h2);
+            automat.addKuchen(o1);
+            automat.addKuchen(k2);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Date date = new Date();
 
@@ -115,72 +157,84 @@ public class AutomatVerwaltungTest {
 
 
     @Test
-    public void inspektionsdatumEineKuchen() throws AutomatException, InterruptedException {
-        automat.addHersteller(h1);
+    public void inspektionsdatumEineKuchen()  {
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(obstkuchen);
 
-        automat.addKuchen(obstkuchen);
+            automat.inspectCake(0);
+        } catch (AutomatException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Date date = new Date();
-
-        automat.inspectCake(0);
 
         Assertions.assertEquals(automat.getCakeList()[0].getInspektionsdatum(), date );
 
     }
 
    @Test
-    public void addManyCakesGood() throws AutomatException, InterruptedException {
+    public void addManyCakesGood() {
 
-        automat.addHersteller(h1);
-        automat.addHersteller(h2);
+       try {
+            automat.addHersteller(h1);
+            automat.addHersteller(h2);
+            automat.addKuchen(o1);
+           automat.addKuchen(kremkuchen);
+       } catch (AutomatException e) {
+           e.printStackTrace();
+       } catch (InterruptedException e) {
+           e.printStackTrace();
+       }
 
 
-        automat.addKuchen(o1);
-        automat.addKuchen(kremkuchen);
-
-
-        Assertions.assertEquals(automat.getCakeList()[0], o1);
+       Assertions.assertEquals(automat.getCakeList()[0], o1);
         Assertions.assertEquals(automat.getCakeList()[1], kremkuchen);
 
     }
 
 
     @Test
-    public void addCakeHerstellerNotExisting() throws AutomatException {
+    public void addCakeHerstellerNotExisting() {
 
         Assertions.assertThrows(AutomatException.class, () ->  automat.addKuchen(o1));
 
     }
 
     @Test
-    public void getAlleKuchenEinesTypGut() throws AutomatException, InterruptedException {
+    public void getAlleKuchenEinesTypGut() {
 
-        automat.addHersteller(h1);
-        automat.addHersteller(h2);
+        try {
+            automat.addHersteller(h1);
+            automat.addHersteller(h2);
+            automat.addKuchen(o1);
+            automat.addKuchen(o1);
+            automat.addKuchen(k2);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-
-        automat.addKuchen(o1);
-        automat.addKuchen(o1);
-        automat.addKuchen(k2);
-
-       KuchenKomponent[] kuchentypList = automat.getAlleKuchenEinesTyps(Kuchentyp.OBSTKUCHEN.toString());
+        KuchenKomponent[] kuchentypList = automat.getAlleKuchenEinesTyps(Kuchentyp.OBSTKUCHEN.toString());
 
          Assertions.assertEquals(kuchentypList.length, 2);
          Assertions.assertEquals(automat.getAlleKuchenEinesTyps("KREMKUCHEN").length, 1);
 
-
-
     }
 
     @Test
-    public void getAnzahlKuchenProHersteller() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-
-
-        automat.addKuchen(k2);
-        automat.addKuchen(kremkuchen2);
-        automat.addKuchen(kremkuchen);
+    public void getAnzahlKuchenProHersteller() {
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(k2);
+            automat.addKuchen(kremkuchen2);
+            automat.addKuchen(kremkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         automat.getHerstellerListMitKuchenAnzahl();
 
@@ -189,17 +243,21 @@ public class AutomatVerwaltungTest {
     }
 
     @Test
-    public void mockitoAddHerstellerDoppelt() throws AutomatException {
+    public void mockitoAddHerstellerDoppelt() {
 
         Hersteller hersteller = mock(HerstellerImpl.class);
-        automat.addHersteller(hersteller);
+        try {
+            automat.addHersteller(hersteller);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertThrows(Exception.class, () -> automat.addHersteller(hersteller));
 
     }
 
     @Test
-    public void mockitoAddCakeHerstellerNotExisting() throws AutomatException {
+    public void mockitoAddCakeHerstellerNotExisting(){
 
         KuchenKomponent kuchen = mock(KuchenKomponent.class);
 
@@ -208,45 +266,70 @@ public class AutomatVerwaltungTest {
     }
 
     @Test
-    public void getHerstellerTest() throws AutomatException, InterruptedException {
+    public void getHerstellerTest()  {
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(k2);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-       automat.addHersteller(h1);
-       automat.addKuchen(k2);
-
-       Assertions.assertEquals(automat.getCakeList()[0].getHersteller(), h1);
+        Assertions.assertEquals(automat.getCakeList()[0].getHersteller(), h1);
     }
 
     @Test
-    public void getAllergenTest() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(obstkuchen);
+    public void getAllergenTest(){
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(obstkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(automat.getCakeList()[0].getAllergene(), Collections.singleton(Allergen.Gluten));
     }
     @Test
-    public void getNaehrwertTest() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(obstkuchen);
+    public void getNaehrwertTest() {
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(obstkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(automat.getCakeList()[0].getNaehrwert(), 200);
     }
 
     @Test
-    public void getHaltbarkeitTest() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(kremkuchen);
+    public void getHaltbarkeitTest(){
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(kremkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(automat.getCakeList()[0].getHaltbarkeit(), Duration.ofDays(3));
     }
 
     @Test
-    public void getPreisTest() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(obstkuchen);
+    public void getPreisTest() {
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(obstkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(automat.getCakeList()[0].getPreis(),BigDecimal.valueOf(3.5) );
     }
@@ -254,11 +337,16 @@ public class AutomatVerwaltungTest {
 
 
     @Test
-    public void getFachnummerTest() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(kremkuchen);
-        automat.addKuchen(obstkuchen);
+    public void getFachnummer(){
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(kremkuchen);
+            automat.addKuchen(obstkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         Assertions.assertEquals(0, automat.getCakeList()[0].getFachnummer());
@@ -266,23 +354,32 @@ public class AutomatVerwaltungTest {
     }
 
 
-
     @Test
-    public void getVorhandeneAllergene() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(k2);
+    public void getVorhandeneAllergene(){
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(k2);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(k2.getAllergene(), automat.getVorhandeneAllergene());
 
     }
 
     @Test
-    public void getNichtVorhandeneAllergene() throws AutomatException, InterruptedException {
-
-        automat.addHersteller(h1);
-        automat.addKuchen(k2);
-        automat.addKuchen(kremkuchen);
+    public void getNichtVorhandeneAllergene() {
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(k2);
+            automat.addKuchen(kremkuchen);
+        } catch (AutomatException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         EnumSet<Allergen> allergensList = EnumSet.allOf(Allergen.class);
         allergensList.removeAll(k2.getAllergene());
@@ -292,4 +389,67 @@ public class AutomatVerwaltungTest {
 
     }
 
+    @Test
+    void beobachterAnmelden() {
+        try {
+            AutomatVerwaltung automatVerwaltung = new AutomatVerwaltung(5);
+            Beobachter beobachter = mock(AllergeneBeobachter.class);
+            automatVerwaltung.meldeAn(beobachter);
+
+            Assertions.assertTrue(automatVerwaltung.beobachterList.contains(beobachter));
+
+        } catch (AutomatException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void meherereBeobachterAnmelden() {
+        try {
+            AutomatVerwaltung automatVerwaltung = new AutomatVerwaltung(5);
+            Beobachter allergeneBeobachter = mock(AllergeneBeobachter.class);
+            Beobachter capacityBeobachter = mock(KapazitaetBeobachter.class);
+            automatVerwaltung.meldeAn(allergeneBeobachter);
+            automatVerwaltung.meldeAn(capacityBeobachter);
+
+            Assertions.assertTrue(automatVerwaltung.beobachterList.contains(allergeneBeobachter) && automatVerwaltung.beobachterList.contains(capacityBeobachter) );
+
+        } catch (AutomatException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void beobachterAbmelden() {
+        try {
+            AutomatVerwaltung automatVerwaltung = new AutomatVerwaltung(5);
+            Beobachter allergeneBeobachter = mock(AllergeneBeobachter.class);
+            Beobachter capacityBeobachter = mock(KapazitaetBeobachter.class);
+            automatVerwaltung.meldeAn(allergeneBeobachter);
+            automatVerwaltung.meldeAn(capacityBeobachter);
+
+            automatVerwaltung.meldeAb(allergeneBeobachter);
+
+            Assertions.assertFalse(automatVerwaltung.beobachterList.contains(allergeneBeobachter));
+
+        } catch (AutomatException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void beobachternBenachrichtigen() {
+        try {
+            AutomatVerwaltung automatVerwaltung = new AutomatVerwaltung(5);
+            Beobachter beobachter = mock(AllergeneBeobachter.class);
+            automatVerwaltung.meldeAn(beobachter);
+
+            automatVerwaltung.benachrichtige();
+
+            verify(beobachter, atLeastOnce()).aktualisiere();
+
+        } catch (AutomatException e) {
+            fail();
+        }
+    }
 }

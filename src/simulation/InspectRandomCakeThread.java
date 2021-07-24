@@ -1,9 +1,7 @@
 package simulation;
 
 import automat.AutomatException;
-import automat.AutomatVerwaltung;
 
-import java.util.Date;
 
 public class InspectRandomCakeThread extends Thread {
     AutomatVerwaltungSimulation automatSimulation;

@@ -1,10 +1,10 @@
 package consolePrinter;
 
 import automat.*;
-import events.OutputEventCakeList;
-import events.OutputEventCollection;
-import events.OutputEventHerstellerMap;
-import events.OutputEventString;
+import control.OutputEventCakeList;
+import control.OutputEventCollection;
+import control.OutputEventHerstellerMap;
+import control.OutputEventString;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -55,22 +55,6 @@ public class ConsolePrinter implements Serializable {
         }
     }
 
-
-    public void printKuchentypList(OutputEventCollection outputEventCollection, String kuchentyp) {
-
-        Object[] objectsArray = outputEventCollection.getCollection().toArray();
-
-        try {
-            for (Object o : objectsArray) {
-                if(o != null){
-                    KuchenKomponent cake = (KuchenKomponent) o;
-                    System.out.println(cake.toString());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void printString(OutputEventString outputEventString){
         System.out.println(outputEventString.getString());

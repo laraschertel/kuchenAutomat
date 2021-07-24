@@ -2,13 +2,9 @@ package eventListener;
 
 import automat.*;
 import consolePrinter.ConsolePrinter;
-import consoleReader.ConsoleReader;
-import eventHandlers.OutputEventHandlerHerstellerMap;
-import events.InputEventString;
-import events.OutputEventHerstellerMap;
+import control.OutputEventHerstellerMap;
+import control.OutputEventListenerHerstellerMap;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
