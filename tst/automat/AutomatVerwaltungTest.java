@@ -86,26 +86,87 @@ public class AutomatVerwaltungTest {
             fail();
         }
 
-        Assertions.assertEquals(automat.getHerstellerListMitKuchenAnzahl().size(), 2);
+        Assertions.assertEquals(2, automat.getHerstellerListMitKuchenAnzahl().size());
     }
 
+
     @Test
-    public void addObstkuchen() {
+    public void addObstkuchenBoden() {
 
         try {
             automat.addHersteller(h1);
             automat.addKuchen(obstkuchen);
         } catch (AutomatException e) {
-           fail();
+            fail();
         } catch (InterruptedException e) {
             fail();
         }
-        Assertions.assertEquals(automat.getCakeList()[0], obstkuchen);
+        Assertions.assertEquals(obstkuchen, automat.getCakeList()[0]);
 
     }
 
     @Test
-    public void addKremkuchen() {
+    public void addObstkuchenBelag() {
+
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(o1);
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
+        Assertions.assertEquals(o1, automat.getCakeList()[0]);
+
+    }
+    @Test
+    public void addObstkuchenBodenUndBelag() {
+
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(obstkuchen);
+            automat.addKuchen(o1);
+            Assertions.assertEquals(2, automat.getAnzahlKuchenImAutomat());
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
+
+    }
+
+    @Test
+    public void addKremkuchenBoden() {
+
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(kremkuchen);
+        } catch (AutomatException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
+        }
+        Assertions.assertEquals(kremkuchen, automat.getCakeList()[0]);
+
+    }
+
+    @Test
+    public void addKremkuchenBodenUndBelag() {
+
+        try {
+            automat.addHersteller(h1);
+            automat.addKuchen(kremkuchen);
+            automat.addKuchen(o1);
+            Assertions.assertEquals(2, automat.getAnzahlKuchenImAutomat());
+        } catch (AutomatException | InterruptedException e) {
+            fail();
+        }
+
+    }
+
+
+    @Test
+    public void addKremkuchenBelag() {
 
         try {
             automat.addHersteller(h1);
@@ -187,12 +248,10 @@ public class AutomatVerwaltungTest {
            e.printStackTrace();
        }
 
-
        Assertions.assertEquals(automat.getCakeList()[0], o1);
         Assertions.assertEquals(automat.getCakeList()[1], kremkuchen);
 
     }
-
 
     @Test
     public void addCakeHerstellerNotExisting() {
@@ -203,7 +262,6 @@ public class AutomatVerwaltungTest {
 
     @Test
     public void getAlleKuchenEinesTypGut() {
-
         try {
             automat.addHersteller(h1);
             automat.addHersteller(h2);
@@ -334,8 +392,6 @@ public class AutomatVerwaltungTest {
         Assertions.assertEquals(automat.getCakeList()[0].getPreis(),BigDecimal.valueOf(3.5) );
     }
 
-
-
     @Test
     public void getFachnummer(){
         try {
@@ -347,7 +403,6 @@ public class AutomatVerwaltungTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
 
         Assertions.assertEquals(0, automat.getCakeList()[0].getFachnummer());
         Assertions.assertEquals(1, automat.getCakeList()[1].getFachnummer());

@@ -174,7 +174,7 @@ public class ConsoleReader {
             InputEventHersteller herstellerEvent = new InputEventHersteller(this, modus, hersteller);
             if (null != this.herstellerHandler) herstellerHandler.handle(herstellerEvent);
         } else {
-            System.err.println("Input is not valid");
+            this.outputEventHandlerString.handle(new OutputEventString(this, "ERROR: invalid input"));
         }
     }
 

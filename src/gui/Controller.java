@@ -295,9 +295,10 @@ public class Controller {
                 if (seasem.isSelected()) {
                     allergenCollection.add(Allergen.Sesamsamen);
                 }
+                BigDecimal preis = new BigDecimal(getPreis().replace(',', '.'));
 
                 KuchenKomponent kuchenBoden = new KuchenBoden(kuchentyp, new HerstellerImpl(getHerstellerName()), BigDecimal.valueOf(0), 0, Duration.ofDays(1000), new HashSet<>());
-                KuchenKomponent kuchenBelag = new KuchenBelag(kuchenBoden, new BigDecimal(getPreis()), Integer.parseInt(getNaehrwert()), Duration.ofDays(Long.parseLong(getHaltbarkeit())), allergenCollection, getName());
+                KuchenKomponent kuchenBelag = new KuchenBelag(kuchenBoden, preis, Integer.parseInt(getNaehrwert()), Duration.ofDays(Long.parseLong(getHaltbarkeit())), allergenCollection, getName());
                 this.automat.getAutomat().addKuchen(kuchenBelag);
 
                 

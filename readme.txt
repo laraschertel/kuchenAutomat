@@ -1,2 +1,2 @@
-kein JPB
+kein JBP
 kein Drag and Drop

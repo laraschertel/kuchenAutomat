@@ -103,17 +103,4 @@ class KuchenBodenTest {
 
     }
 
-    @Test
-    void testToString() {
-        Date date = new GregorianCalendar(2021, Calendar.JULY, 20).getTime();
-        KuchenKomponent kuchenBoden = new KuchenBoden(Kuchentyp.KREMKUCHEN, new HerstellerImpl("h1"), BigDecimal.valueOf(0), 0, Duration.ofDays(1000), new HashSet<>());
-
-        kuchenBoden.setInspektionsdatum(date);
-        kuchenBoden.setEinfuegeDatum(date);
-
-        kuchenBoden.toString();
-        String print =  "0. Kuchentyp: KREMKUCHEN Hersteller: h1, preis: 0, Naehrwert: 0, Allergene: [], Haltbarkeit in Tagen: 996, Inpektionsdatum:  Tue Jul 20 00:00:00 CEST 2021 Einfügedatum: Tue Jul 20 00:00:00 CEST 2021";
-
-        Assertions.assertEquals(kuchenBoden.toString(),print);
-    }
 }

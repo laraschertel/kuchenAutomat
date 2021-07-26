@@ -13,8 +13,18 @@ public class CLI {
     public static void main(String[] args) throws AutomatException {
         ConsoleReader r=new ConsoleReader();
         ConsolePrinter cp = new ConsolePrinter();
-        //TODO default eingebenen wennn kein int
-        int capacity = readAutomatCapacity("Bitte the gewünschte grosse des Automaten eingeben");
+        int capacity = 0;
+
+        if(args.length > 0){
+            try {
+                 capacity = Integer.parseInt(args[0]);
+            }catch (NumberFormatException e){
+                System.err.println("Keine Zahl eingegeben, die Standard groeße 20 wird benutzt");
+            }
+            if (capacity == 0){
+                capacity = 20;
+            }
+        }
 
         AutomatVerwaltung automat= new AutomatVerwaltung(capacity);
         AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
@@ -55,26 +65,6 @@ public class CLI {
 
         r.readInput();
 
-    }
-
-    public static int readAutomatCapacity(String text) {
-        System.out.print(text + " ");
-        int x = 0;
-        boolean a = true;
-        while (a) {
-            Scanner myInput = new Scanner(System.in);
-            if (myInput.hasNextInt()) {
-                x = myInput.nextInt();
-                a = false;
-                return x;
-            }
-            else {
-                System.out.println("Invalid input, try again");
-                System.out.print(text);
-                myInput.next();
-            }
-        }
-        return x;
     }
 
 }

@@ -7,12 +7,26 @@ import control.*;
 import control.KapazitaetBeobachter;
 
 import java.util.Scanner;
-
+/*
+Alternatives CLI: Allergene können nicht aufgelistet werden und kuchen können nicht gelöscht werden
+ */
 public class AlternativesCLI {
     public static void main(String[] args) throws AutomatException {
         ConsoleReader r=new ConsoleReader();
         ConsolePrinter cp = new ConsolePrinter();
-        int capacity = readAutomatCapacity("Bitte the gewünschte grosse des Automaten eingeben");
+
+        int capacity = 0;
+
+        if(args.length > 0){
+            try {
+                capacity = Integer.parseInt(args[0]);
+            }catch (NumberFormatException e){
+                System.err.println("Keine Zahl eingegeben, die Standard groeße 20 wird benutzt");
+            }
+            if (capacity == 0){
+                capacity = 20;
+            }
+        }
 
         AutomatVerwaltung automat= new AutomatVerwaltung(capacity);
         AutomatPlaceHolder automatPlaceHolder = new AutomatPlaceHolder(automat);
@@ -21,8 +35,6 @@ public class AlternativesCLI {
         InputEventHandlerCake cakeHandler = new InputEventHandlerCake();
         InputEventHandlerHersteller herstellerHandler = new InputEventHandlerHersteller();
         InputEventHandlerString stringHandler = new InputEventHandlerString();
-        //InputEventHandlerInteger integerHandler = new InputEventHandlerInteger();
-       // OutputEventHandlerCollection outputCollectionHandler = new OutputEventHandlerCollection();
         OutputEventHandlerString outputEventHandlerString = new OutputEventHandlerString();
         OutputEventHandlerHerstellerMap outputEventHandlerHerstellerMap = new OutputEventHandlerHerstellerMap();
         OutputEventHandlerCakeList outputEventHandlerCakeList = new OutputEventHandlerCakeList();
@@ -30,7 +42,6 @@ public class AlternativesCLI {
         InputEventListenerCakeImpl lCake = new InputEventListenerCakeImpl(automatPlaceHolder);
         InputEventListenerHerstellerImpl lHersteller = new InputEventListenerHerstellerImpl(automatPlaceHolder);
         InputEventListenerStringImpl lString = new InputEventListenerStringImpl(automatPlaceHolder, null, outputEventHandlerString, outputEventHandlerHerstellerMap,outputEventHandlerCakeList);
-       // InputEventListenerIntegerImpl lInteger = new InputEventListenerIntegerImpl(automatPlaceHolder);
         OutputEventListenerCollectionImpl lOutputCollection = new OutputEventListenerCollectionImpl(cp);
         OutputEventListenerStringImpl lOutputString = new OutputEventListenerStringImpl(cp);
         OutputEventListenerHerstellerMap lOutputHerstellerMap = new OutputEventListenerHerstellerMap(cp);
@@ -39,40 +50,17 @@ public class AlternativesCLI {
         cakeHandler.add(lCake);
         herstellerHandler.add(lHersteller);
         stringHandler.add(lString);
-        //integerHandler.add(lInteger);
-        //outputCollectionHandler.add(lOutputCollection);
+
         outputEventHandlerString.add(lOutputString);
         outputEventHandlerHerstellerMap.add(lOutputHerstellerMap);
         outputEventHandlerCakeList.add(lOutputCakeList);
 
         KapazitaetBeobachter kapazitaetBeobachter = new KapazitaetBeobachter(automatPlaceHolder, outputEventHandlerString);
-        //AllergeneBeobachter allergeneBeobachter = new AllergeneBeobachter(automatPlaceHolder, outputEventHandlerString);
-        //KuchenBeobachter kuchenBeobachter = new KuchenBeobachter(automatPlaceHolder, outputEventHandlerString);
 
         r.setHandlers(null, stringHandler, cakeHandler, herstellerHandler,  outputEventHandlerString);
 
         r.readInput();
 
-    }
-
-    public static int readAutomatCapacity(String text) {
-        System.out.print(text + " ");
-        int x = 0;
-        boolean a = true;
-        while (a) {
-            Scanner myInput = new Scanner(System.in);
-            if (myInput.hasNextInt()) {
-                x = myInput.nextInt();
-                a = false;
-                return x;
-            }
-            else {
-                System.out.println("Invalid input, try again");
-                System.out.print(text);
-                myInput.next();
-            }
-        }
-        return x;
     }
 
 }
